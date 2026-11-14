@@ -291,11 +291,11 @@
     <section class="plans hidden in" id="plans" aria-label="Choose a date plan">
       <div class="sectionhead"><div class="eyebrow">Quest accepted! +100 courage ♡</div><div class="happy-face" aria-hidden="true">🥹💗</div><h2>Choose your <span class="rose">side quest</span></h2><p>I prepared three possible adventures. Choose whichever sounds fun. <br>Plot twist: you get to pick the day too!</p></div>
       <div class="plan-grid">
-        <article class="plan-card" data-plan="Chinatown & REXKL">
+        <article class="plan-card" data-plan="REXKL & Central Market">
           <div class="plan-art art-1"><span class="art-emoji" aria-hidden="true">📚☕</span></div>
-          <div class="plan-body"><div class="smallcaps">Plan 01 · Artsy & easygoing</div><h3>Chinatown & REXKL</h3><p class="plan-sub">Coffee, books, little shops and walking around old KL.</p><div class="stats"><span>🕜 1:30–5:30 PM</span><span>✨ Little adventures</span></div>
-          <details class="itinerary"><summary>See our afternoon itinerary <span aria-hidden="true">⌄</span></summary><ul class="timeline"><li><time>1:30</time><span>Coffee at REXKL</span></li><li><time>2:15</time><span>Browse BookXcess bookstore</span></li><li><time>3:00</time><span>Late lunch around REXKL</span></li><li><time>3:45</time><span>Walk around Petaling Street</span></li><li><time>4:30</time><span>Central Market & little shops</span></li></ul><a class="map-link" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query=REXKL%2C%20Kuala%20Lumpur">📍 Find this place on Google Maps ↗</a></details>
-          <button class="btn secondary choose" type="button" aria-label="Choose Chinatown and REXKL">I like this plan ♡</button></div>
+          <div class="plan-body"><div class="smallcaps">Plan 01 · Artsy & easygoing</div><h3>REXKL & Central Market</h3><p class="plan-sub">Coffee, a bookstore maze, good food and creative little shops. Mostly indoors!</p><div class="stats"><span>🕜 1:30–5:30 PM</span><span>✨ Little adventures</span></div>
+          <details class="itinerary"><summary>See our afternoon itinerary <span aria-hidden="true">⌄</span></summary><ul class="timeline"><li><time>1:30</time><span>Coffee at REXKL</span></li><li><time>2:15</time><span>Browse BookXcess bookstore</span></li><li><time>3:00</time><span>Late lunch around REXKL</span></li><li><time>3:45</time><span>Explore Central Market’s arts and craft shops</span></li><li><time>4:30</time><span>Browse the Annexe galleries or try a craft activity</span></li><li><time>5:00</time><span>Optional dessert or snack before heading home</span></li></ul><a class="map-link" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/dir/?api=1&amp;origin=REXKL%2C%20Jalan%20Sultan%2C%20Kuala%20Lumpur&amp;destination=Central%20Market%2C%20Kuala%20Lumpur&amp;travelmode=walking">📍 View the walking route on Google Maps ↗</a></details>
+          <button class="btn secondary choose" type="button" aria-label="Choose REXKL and Central Market">I like this plan ♡</button></div>
         </article>
         <article class="plan-card" data-plan="The Exchange TRX">
           <div class="plan-art art-2"><span class="art-emoji" aria-hidden="true">🍵🌿</span></div>
@@ -427,7 +427,7 @@
   // Calendar links are opt-in: neither person's private calendar is modified here.
   // Times are in Kuala Lumpur / Malaysia (UTC+08:00), even if the visitor is abroad.
   const SCHEDULES = {
-    'Chinatown & REXKL': {start:[13,30], end:[17,30], location:'REXKL, Jalan Sultan, Kuala Lumpur, Malaysia'},
+    'REXKL & Central Market': {start:[13,30], end:[17,30], location:'REXKL, 80 Jalan Sultan, Kuala Lumpur, Malaysia'},
     'The Exchange TRX': {start:[13,30], end:[17,0], location:'The Exchange TRX, Kuala Lumpur, Malaysia'},
     'KLCC & Suria KLCC': {start:[14,0], end:[17,30], location:'Suria KLCC, Kuala Lumpur, Malaysia'}
   };
@@ -449,7 +449,7 @@
     const durationMinutes = (spec.end[0]*60+spec.end[1]) - (spec.start[0]*60+spec.start[1]);
     const end = new Date(start.getTime()+durationMinutes*60000);
     const title = 'Coffee & a little KL date ♡ — ' + selectedPlan;
-    const details = 'Coffee, food and jalan-jalan around KL. Tentative until we confirm together in our chat. (Malaysia time)';
+    const details = selectedPlan === 'REXKL & Central Market' ? 'Meet at REXKL for coffee, browse BookXcess, grab lunch and explore Central Market. Tentative until we confirm together in our chat. (Malaysia time)' : 'Coffee, food and jalan-jalan around KL. Tentative until we confirm together in our chat. (Malaysia time)';
     const url = new URL('https://calendar.google.com/calendar/r/eventedit');
     url.search = new URLSearchParams({
       action:'TEMPLATE', dates:utcIcs(start)+'/'+utcIcs(end),
