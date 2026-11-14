@@ -99,3 +99,46 @@ html[data-theme="night"] .map-preview-button{background:#49354f;color:#fae1ed;bo
 html[data-theme="night"] .reply-form .field-hint,html[data-theme="night"] .reply-form .optional,html[data-theme="night"] .confirmation-update-note,html[data-theme="night"] .quest-hint,html[data-theme="night"] .under{color:#ecd3e1!important}
 html[data-theme="night"] .photo-caption a{color:white}
 @media(prefers-reduced-motion:reduce){.plan-grid{scroll-behavior:auto!important}.photo-gallery img{transition:none!important}}
+
+/* Final touches: practical meet-ups, rain plans, and a handwritten thank-you */
+.comfort-tips{margin:0 0 16px;border:1px solid #eddbda;background:#fff9f7;border-radius:14px;overflow:hidden}
+.comfort-tips summary{list-style:none;display:flex;align-items:center;justify-content:space-between;min-height:44px;padding:10px 12px;color:#a05e76;font-size:12px;font-weight:700;line-height:1.45;cursor:pointer}
+.comfort-tips summary::-webkit-details-marker{display:none}
+.comfort-tips summary:after{content:"⌄";display:inline-block;font-size:20px;margin-left:8px;transition:transform .2s}
+.comfort-tips[open] summary:after{transform:rotate(180deg)}
+.comfort-tips p{margin:0;padding:5px 13px 11px;color:#765d68;font-size:12px;line-height:1.65}
+.comfort-tips strong{color:#9a5971}
+.comfort-tips .comfort-reminder{background:#fff1f3;padding:10px 13px;color:#946a7b;font-size:11px}
+.selected-comfort{display:grid;gap:10px;margin:12px 0 14px}
+.selected-comfort p{margin:0;padding:11px 13px;background:#fff;border:1px solid #f0dcdc;border-radius:12px;color:#735768;font-size:12px;line-height:1.65}
+.selected-comfort strong{display:block;color:#a45f7d;margin-bottom:4px;font-size:12px}
+.selected-comfort span{display:block}
+.selected-comfort small{font-size:11px;color:#92717e;line-height:1.55}
+.closing-letter{box-sizing:border-box;width:min(100%,600px);margin:33px auto 16px;text-align:center;border:1px solid #efd4d5;border-radius:22px;padding:23px 23px 18px;background:linear-gradient(145deg,#fffdfa,#fff3f5);box-shadow:0 9px 28px #8d627a10;transform:rotate(-.7deg)}
+.closing-letter p{font-family:'Caveat','Segoe Print','Bradley Hand',cursive;font-size:clamp(23px,3.7vw,31px);line-height:1.26;font-weight:600;color:#9c607a;margin:0 auto 8px}
+.closing-letter .letter-heart{display:block;font-size:24px;color:#d98da5;line-height:1.1;margin-bottom:6px}
+.closing-letter .letter-signature{font-family:'Caveat','Segoe Print','Bradley Hand',cursive;font-size:21px;color:#b38691}
+.confirmation-companion{display:flex;align-items:center;justify-content:center;gap:12px;max-width:440px;margin:16px auto 0;padding:13px 15px;background:#fff7ee;border:1px dashed #e6b6b5;border-radius:18px}
+.confirmation-companion>span{font-size:43px;line-height:1.1;display:block;filter:drop-shadow(0 4px 5px #dba9a540);animation:emojiDance 3s ease-in-out infinite}
+.confirmation-companion p{font-size:13px!important;line-height:1.5!important;text-align:left;margin:0!important;color:#946274!important}
+html[data-theme="night"] .comfort-tips,html[data-theme="night"] .closing-letter{background:#3b3043;border-color:#775569}
+html[data-theme="night"] .comfort-tips summary,html[data-theme="night"] .comfort-tips strong,html[data-theme="night"] .selected-comfort strong{color:#f0bed0}
+html[data-theme="night"] .comfort-tips p,html[data-theme="night"] .selected-comfort p{color:#f1d9e5}
+html[data-theme="night"] .comfort-tips .comfort-reminder,html[data-theme="night"] .selected-comfort p{background:#4b3a51;border-color:#75566b}
+html[data-theme="night"] .selected-comfort small{color:#d8bdcb}
+html[data-theme="night"] .closing-letter p{color:#f4cedf}
+html[data-theme="night"] .closing-letter .letter-signature{color:#d4adbc}
+html[data-theme="night"] .confirmation-companion{background:#44354c;border-color:#b4889e}
+html[data-theme="night"] .confirmation-companion p{color:#f2d0df!important}
+@media(max-width:530px){
+  .comfort-tips{margin-bottom:13px}
+  .selected-comfort{gap:8px}
+  .closing-letter{width:calc(100% - 18px);padding:21px 14px 16px;margin-top:26px;transform:none}
+  .closing-letter p{font-size:26px}
+  .confirmation-companion{gap:9px;padding:11px}
+  .confirmation-companion>span{font-size:36px}
+}
+@media(prefers-reduced-motion:reduce){
+  .confirmation-companion>span{animation:none!important}
+  .comfort-tips summary:after{transition:none!important}
+}
