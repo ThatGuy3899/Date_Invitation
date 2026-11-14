@@ -8,10 +8,30 @@
   const planNames = ["REXKL & Central Market","The Exchange TRX","KLCC & Suria KLCC","118 Mall & Merdeka 118"];
   const suggestedName = "Your own suggestion";
   const locationInfo = {
-    "REXKL & Central Market": {where:"REXKL, Jalan Sultan, Kuala Lumpur",transit:"Pasar Seni MRT/LRT · Merdeka MRT",details:"Coffee, books and Central Market",search:"REXKL Kuala Lumpur"},
-    "The Exchange TRX":{where:"The Exchange TRX, Persiaran TRX",transit:"Tun Razak Exchange MRT",details:"Coffee, shops and the rooftop park",search:"The Exchange TRX Kuala Lumpur"},
-    "KLCC & Suria KLCC":{where:"Suria KLCC, Kuala Lumpur",transit:"KLCC LRT",details:"Coffee, bookstore and KLCC Park",search:"Suria KLCC Kuala Lumpur"},
-    "118 Mall & Merdeka 118":{where:"118 Mall, Jalan Hang Jebat",transit:"Merdeka MRT · Plaza Rakyat LRT",details:"Explore the new mall together",search:"118 Mall Kuala Lumpur"}
+    "REXKL & Central Market": {
+      where:"REXKL, Jalan Sultan, Kuala Lumpur", transit:"Pasar Seni MRT/LRT · walk to REXKL",details:"Coffee, books and Central Market",search:"REXKL Kuala Lumpur",
+      meet:"Outside REXKL's main entrance on Jalan Sultan, or at Pasar Seni station if that's easier for you.",
+      rain:"We can stay inside REXKL for coffee and BookXcess. If the rain gets heavy, we can save Central Market for another time."
+    },
+    "The Exchange TRX":{
+      where:"The Exchange TRX, Persiaran TRX",transit:"Tun Razak Exchange MRT · linked to the mall",details:"Coffee, shops and the rooftop park",search:"The Exchange TRX Kuala Lumpur",
+      meet:"Inside The Exchange TRX, near the Concourse Level pedestrian link from Tun Razak Exchange MRT.",
+      rain:"We can skip the rooftop garden and explore the indoor shops, cafés and food spots instead."
+    },
+    "KLCC & Suria KLCC":{
+      where:"Suria KLCC, Kuala Lumpur",transit:"KLCC LRT · follow the Suria KLCC signs",details:"Coffee, bookstore and KLCC Park",search:"Suria KLCC Kuala Lumpur",
+      meet:"Inside Suria KLCC near the KLCC LRT-linked Concourse Level entrance.",
+      rain:"We can skip KLCC Park and spend more time indoors at Kinokuniya, a café or the mall."
+    },
+    "118 Mall & Merdeka 118":{
+      where:"118 Mall, Jalan Hang Jebat",transit:"Merdeka MRT · direct mall connection",details:"Explore the new mall together",search:"118 Mall Kuala Lumpur",
+      meet:"On the 118 Mall side of the pedestrian connection from Merdeka MRT. We can confirm a specific landmark in chat.",
+      rain:"We can stay inside 118 Mall for the artisan shops, the mall's interiors and a meal, then skip outdoor photos."
+    }
+  };
+  const openEndedTips = {
+    meet:"We can choose an easy-to-find public meeting point once we agree on a place.",
+    rain:"If it rains, we can pick an indoor café nearby or choose another day."
   };
   // Photographer details and licensing are linked to the original Commons file pages.
   const commons = file => "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(file) + "?width=900";
@@ -122,6 +142,26 @@
   customCard.dataset.plan=suggestedName;
   customCard.innerHTML='<div class="plan-art"><span class="art-emoji" aria-hidden="true">💡📍</span></div><div class="plan-body"><div class="smallcaps">Plan 05 · Your call</div><h3>Somewhere else?</h3><p class="plan-sub">Have a café or place you want to try? I’m open to your ideas too.</p><div class="stats"><span>🗓️ Your schedule</span><span>✨ Your choice</span></div><button class="btn secondary choose" type="button">Suggest a place ♡</button></div>';
   const planGrid=$(".plan-grid");planGrid.appendChild(customCard);
+  // Helpful details, not a fixed itinerary: each meeting place is just a suggestion.
+  $(".plan-card",planGrid).forEach(card=>{
+    const info=locationInfo[card.dataset.plan] || openEndedTips;
+    const details=document.createElement("details");
+    details.className="comfort-tips";
+    const summary=document.createElement("summary");
+    summary.textContent="📍 Meet-up & rainy-day backup";
+    const meeting=document.createElement("p");
+    const headingMeet=document.createElement("strong");headingMeet.textContent="Easy meet-up: ";
+    meeting.append(headingMeet,document.createTextNode(info.meet));
+    const rain=document.createElement("p");
+    const headingRain=document.createElement("strong");headingRain.textContent="If it rains: ";
+    rain.append(headingRain,document.createTextNode(info.rain));
+    const flexible=document.createElement("p");
+    flexible.className="comfort-reminder";
+    flexible.textContent="Nothing is set in stone — we'll choose the spot and timing together ♡";
+    details.append(summary,meeting,rain,flexible);
+    const choose=$(".choose",card);
+    choose.parentElement.insertBefore(details,choose);
+  });
   const customWrap=document.createElement("div");
   customWrap.className="custom-location-wrap hidden";customWrap.id="custom-location-wrap";
   customWrap.innerHTML='<label for="custom-place">📍 Where would you like to go? <span class="optional">(optional)</span></label><input type="text" id="custom-place" maxlength="140" autocomplete="off" placeholder="A café, mall, or somewhere you’ve been wanting to try"><small>Even a rough idea is fine — we can settle the details together.</small>';
@@ -130,16 +170,18 @@
   yesForm.parentElement.insertBefore(customWrap,yesForm);
   const preview=document.createElement("div");
   preview.id="location-preview";preview.className="location-preview hidden";
-  preview.innerHTML='<h3 id="location-heading">Meeting spot</h3><p class="transit" id="location-transit"></p><button class="map-preview-button" type="button" id="show-location-map">🗺️ Load map preview</button><iframe id="location-map" title="Map preview of selected date location" loading="lazy" hidden referrerpolicy="no-referrer-when-downgrade"></iframe><div class="map-actions"><a id="location-directions" target="_blank" rel="noopener noreferrer">Open Google Maps ↗</a><a id="location-transit-link" target="_blank" rel="noopener noreferrer">Transit directions ↗</a></div>';
+  preview.innerHTML='<h3 id="location-heading">Meeting spot</h3><p class="transit" id="location-transit"></p><div class="selected-comfort"><p><strong>📍 Suggested meet-up</strong><span id="selected-meet"></span></p><p><strong>☔ Rainy-day backup</strong><span id="selected-rain"></span></p><small>Just ideas — we can confirm a meeting point and time together in chat.</small></div><button class="map-preview-button" type="button" id="show-location-map">🗺️ Load map preview</button><iframe id="location-map" title="Map preview of selected date location" loading="lazy" hidden referrerpolicy="no-referrer-when-downgrade"></iframe><div class="map-actions"><a id="location-directions" target="_blank" rel="noopener noreferrer">Open Google Maps ↗</a><a id="location-transit-link" target="_blank" rel="noopener noreferrer">Transit directions ↗</a></div>';
   customWrap.parentElement.insertBefore(preview,yesForm);
   const updateMap=()=>{
     const custom=selectedPlan===suggestedName;
     const supplied=safeText(customInput.value);
-    const info=custom ? {where:supplied||"Your idea, to be decided",transit:supplied?"We can decide where to meet":"No location needed yet",search:supplied} : locationInfo[selectedPlan];
+    const info=custom ? {...openEndedTips,where:supplied||"Your idea, to be decided",transit:supplied?"We can decide where to meet":"No location needed yet",search:supplied} : locationInfo[selectedPlan];
     if(!info){preview.classList.add("hidden");return;}
     preview.classList.remove("hidden");
     $("#location-heading",preview).textContent=info.where;
     $("#location-transit",preview).textContent=info.transit;
+    $("#selected-meet",preview).textContent=info.meet;
+    $("#selected-rain",preview).textContent=info.rain;
     const query=info.search ? encodeURIComponent(info.search) : "";
     const iframe=$("#location-map",preview);
     const loadMap=$("#show-location-map",preview);
@@ -243,7 +285,7 @@
   // 6. Confirmation only after Formspree really reports success.
   const confirmation=document.createElement("section");confirmation.id="confirmation";confirmation.className="confirmation-card hidden in";
   confirmation.setAttribute("aria-label","Answer sent successfully");
-  confirmation.innerHTML='<div class="top-illustration" aria-hidden="true">📬</div><div class="eyebrow">Message submitted · quest complete!</div><h2 id="confirmation-title" tabindex="-1">Your answer was sent ♡</h2><p id="confirmation-desc">Thanks for taking the time to reply.</p><div id="confirmation-summary" class="confirmation-summary"></div><p id="confirmation-footnote">Nothing is booked until we confirm together.</p><div class="actions"><a href="#" target="_blank" rel="noopener noreferrer" id="confirmation-calendar" class="btn secondary">Add to Google Calendar ↗</a><button type="button" id="confirmation-restart" class="btn secondary">Change my answer ✎</button></div><p class="confirmation-update-note">Need to correct something? Changing your answer sends a new, clearly labelled update. It does not delete the first message.</p>';
+  confirmation.innerHTML='<div class="top-illustration" aria-hidden="true">📬</div><div class="eyebrow">Message submitted · quest complete!</div><h2 id="confirmation-title" tabindex="-1">Your answer was sent ♡</h2><p id="confirmation-desc">Thanks for taking the time to reply.</p><div id="confirmation-companion" class="confirmation-companion hidden"><span id="confirmation-companion-emoji" aria-hidden="true"></span><p>Your tiny arcade friend tagged along for the adventure. Still a virtual plushie, of course ♡</p></div><div id="confirmation-summary" class="confirmation-summary"></div><p id="confirmation-footnote">Nothing is booked until we confirm together.</p><div class="actions"><a href="#" target="_blank" rel="noopener noreferrer" id="confirmation-calendar" class="btn secondary">Add to Google Calendar ↗</a><button type="button" id="confirmation-restart" class="btn secondary">Change my answer ✎</button></div><p class="confirmation-update-note">Need to correct something? Changing your answer sends a new, clearly labelled update. It does not delete the first message.</p>';
   footer.parentElement.insertBefore(confirmation,footer);
   $("#confirmation-restart").addEventListener("click",()=>{
     if (typeof reopenResponseForEdit !== "function" || !reopenResponseForEdit()) return;
@@ -261,6 +303,11 @@
     $$(".quest-step").forEach(step=>{step.classList.remove("is-active");step.classList.add("is-done");});
     questHint.textContent="Quest complete · Thanks for sending your answer.";
     const yes=response==="Yes",maybe=response==="Maybe";
+    const prizeBox=$("#claw-prize");
+    const earnedToy=prizeBox && !prizeBox.classList.contains("hidden") && $("#claw-prize-emoji").textContent.trim();
+    const companion=$("#confirmation-companion");
+    companion.classList.toggle("hidden",!yes||!earnedToy);
+    $("#confirmation-companion-emoji").textContent=yes && earnedToy ? earnedToy : "";
     $("#confirmation-title").textContent=yes?"Your date idea has been sent! 💗":maybe?"Message sent, no rush 🫶":"Thank you for answering 🌷";
     $("#confirmation-desc").textContent=yes?"Your choice was submitted. We can confirm the details together in our chat.":maybe?"Your message was submitted. We can keep chatting and see what feels right.":"Your answer was submitted. Thanks for letting me know.";
     $("#confirmation-footnote").textContent=yes?"Nothing is booked until we both confirm in chat.":maybe?"No rush — we can keep things relaxed.":"No pressure to explain or change your mind.";
