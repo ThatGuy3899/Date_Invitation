@@ -206,6 +206,37 @@
     .copy-overlay-card p{font-size:13px;color:#8d7172}
     .copy-overlay-card textarea{width:100%;box-sizing:border-box;min-height:120px;border:1px solid #e7c6ca;border-radius:12px;padding:12px;font:14px/1.6 'DM Sans',system-ui,sans-serif;color:#594648}
     @media(max-width:530px){.calendar-tools .actions{flex-direction:column}.calendar-tools .btn{width:100%}.copy-overlay-card{padding:20px 16px}}
+
+    /* v5: small quest tracker, third response path, and time selection */
+    .quest-track{max-width:780px;margin:1px auto 14px;padding:15px 20px;border:1px solid #f1ddd9;background:#fffefbcc;border-radius:20px;box-shadow:0 9px 24px #8957570b}
+    .quest-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+    .quest-step{display:flex;align-items:center;justify-content:center;gap:8px;color:#a89491;font-size:12px;font-weight:700;white-space:nowrap;transition:color .25s,transform .25s}
+    .quest-step .step-num{width:27px;height:27px;border:1px solid #e4d3d1;border-radius:50%;display:grid;place-items:center;background:white;font-size:10px}
+    .quest-step.is-active{color:#b85c76;transform:translateY(-1px)}
+    .quest-step.is-active .step-num{background:#eb8d96;color:white;border-color:#eb8d96;box-shadow:0 3px 9px #eb8d9655}
+    .quest-step.is-done{color:#7c9785}
+    .quest-step.is-done .step-num{background:#e5f3e8;border-color:#b8ddc6}
+    .quest-hint{margin:9px 0 0!important;text-align:center;color:#a0807e;font-size:11px!important;line-height:1.5}
+    .invite-actions{max-width:635px;margin:auto}
+    .invite-actions .btn{min-width:160px;flex:1}
+    .maybe-note-wrap{width:min(100%,450px);margin:16px auto 21px;text-align:left}
+    .maybe-note-wrap label{display:block;margin-bottom:8px;font-size:13px;font-weight:700;color:#754f55}
+    .maybe-note-wrap textarea{width:100%;box-sizing:border-box;min-height:88px;border:1px solid #e4cfcc;border-radius:14px;padding:13px 14px;background:#fffaf8;color:#4b393b;font:14px/1.5 'DM Sans',sans-serif;resize:vertical}
+    .reply-form select{width:100%;min-height:49px;border:1px solid #e3d0cd;background:#fffaf8;color:#45383a;border-radius:13px;padding:12px 14px;font:inherit;font-size:15px}
+    .reply-form select:focus,.maybe-note-wrap textarea:focus{outline:3px solid #f2c6d1;outline-offset:1px}
+    @media(max-width:530px){.quest-track{padding:12px 9px}.quest-step{font-size:10px;gap:4px}.quest-step .step-num{width:24px;height:24px;font-size:9px}.invite-actions{flex-direction:column}.invite-actions .btn{width:100%}}
+
+    /* v5 extras: peekable itineraries and a hidden heart */
+    .itinerary{margin:-4px 0 18px;border-radius:13px;background:#fff9f7;border:1px solid #f0dfdb;overflow:hidden}
+    .itinerary summary{display:flex;justify-content:space-between;align-items:center;gap:8px;list-style:none;cursor:pointer;color:#ad6271;font-size:12px;font-weight:700;padding:12px 14px;user-select:none}
+    .itinerary summary::-webkit-details-marker{display:none}
+    .itinerary summary span{font-size:18px;transition:transform .2s}
+    .itinerary[open] summary span{transform:rotate(180deg)}
+    .itinerary .timeline{margin:2px 12px 12px;padding:5px 4px 8px}
+    .itinerary .map-link{display:block;background:#f8eded;text-align:center;color:#a15f74;text-decoration:none;padding:11px 12px;font-size:11px;font-weight:700}
+    .itinerary .map-link:hover{text-decoration:underline}
+    .secret-heart{font:inherit;border:0;background:transparent;color:#bc8292;padding:0 3px;cursor:pointer;transition:transform .2s}
+    .secret-heart:hover{transform:scale(1.35) rotate(-10deg)}
   </style>
 </head>
 <body data-scene="invite">
@@ -216,7 +247,15 @@
 </div>
 <div id="celebrations" class="celebrations" aria-hidden="true"></div>
 <div class="shell">
-  <header><span class="brand">a little something ♡</span><span>Made just for you</span></header>
+  <header><span class="brand">a little something ♡</span><span>Made just for you <button type="button" id="easter-egg" class="secret-heart" aria-label="Find a secret note" title="Psst... a tiny secret">♡</button></span></header>
+  <nav class="quest-track" aria-label="Little date quest progress">
+    <div class="quest-steps">
+      <div class="quest-step is-active" data-step="1"><span class="step-num">01</span><span>Say hello</span></div>
+      <div class="quest-step" data-step="2"><span class="step-num">02</span><span>Choose a plan</span></div>
+      <div class="quest-step" data-step="3"><span class="step-num">03</span><span>Pick a date</span></div>
+    </div>
+    <p class="quest-hint" id="quest-hint" aria-live="polite">Quest 1/3 · A tiny question, absolutely no pressure.</p>
+  </nav>
   <main>
     <section class="invitation in" id="invite" aria-label="Date invitation">
       <button class="top-illustration mail-sticker" id="mail-sticker" type="button" aria-label="Tap the envelope for a surprise" title="Psst... tap me!">💌<span class="tap-hint">tap me!</span></button>
@@ -224,7 +263,7 @@
       <h1>Would you like to go on a <span class="rose">date</span> with me?</h1>
       <p class="lede">Maybe coffee, good food and a little jalan-jalan around KL? I made a tiny website because apparently just asking normally was too easy 🫠</p>
       <div class="pills"><span class="pill">☕ Coffee</span><span class="pill">🌤️ An afternoon together</span><span class="pill">📍 Kuala Lumpur</span></div>
-      <div class="actions"><button class="btn primary" id="yes" type="button">Yes, I'd love to ♡</button><button class="btn secondary" id="no" type="button">No, thank you</button></div>
+      <div class="actions invite-actions"><button class="btn primary" id="yes" type="button">Yes, I'd love to ♡</button><button class="btn secondary" id="maybe-button" type="button">Maybe, let's chat 🫶</button><button class="btn secondary" id="no" type="button">No, thank you</button></div>
       <p class="under">No pressure at all, promise :) <span class="little-heart" aria-hidden="true">♡</span></p>
     </section>
     <section class="invitation hidden in" id="decline" aria-label="Thanks for answering">
@@ -238,25 +277,36 @@
       <p class="feedback" id="no-status" role="status" aria-live="polite"></p>
       <button class="quiet" id="go-back" type="button">← Back to the question</button>
     </section>
+    <section class="invitation hidden in" id="maybe" aria-label="Let's talk about it">
+      <div class="top-illustration" aria-hidden="true">🫶</div>
+      <div class="eyebrow">Quest paused · No deadline, promise</div>
+      <h1>We can <span class="rose">figure it out</span> together.</h1>
+      <p class="lede">A maybe is a perfectly good answer. We can just chat and see what works for us. No calendar homework required.</p>
+      <div class="maybe-note-wrap"><label for="maybe-note">Want to leave a note? <span class="optional">(optional)</span></label><textarea id="maybe-note" maxlength="250" placeholder="Maybe another time? / Let's chat a bit more first 😊"></textarea></div>
+      <p class="send-note">You can send this answer here, or copy it into our dating-app chat.</p>
+      <div class="actions"><button class="btn primary" id="send-maybe" type="button">Send my answer 💌</button><button class="btn secondary" id="copy-maybe" type="button">Copy reply</button></div>
+      <p class="feedback" id="maybe-status" role="status" aria-live="polite"></p>
+      <button class="quiet" id="maybe-back" type="button">← Back to the question</button>
+    </section>
     <section class="plans hidden in" id="plans" aria-label="Choose a date plan">
       <div class="sectionhead"><div class="eyebrow">Quest accepted! +100 courage ♡</div><div class="happy-face" aria-hidden="true">🥹💗</div><h2>Choose your <span class="rose">side quest</span></h2><p>I prepared three possible adventures. Choose whichever sounds fun. <br>Plot twist: you get to pick the day too!</p></div>
       <div class="plan-grid">
         <article class="plan-card" data-plan="Chinatown & REXKL">
           <div class="plan-art art-1"><span class="art-emoji" aria-hidden="true">📚☕</span></div>
           <div class="plan-body"><div class="smallcaps">Plan 01 · Artsy & easygoing</div><h3>Chinatown & REXKL</h3><p class="plan-sub">Coffee, books, little shops and walking around old KL.</p><div class="stats"><span>🕜 1:30–5:30 PM</span><span>✨ Little adventures</span></div>
-          <ul class="timeline"><li><time>1:30</time><span>Coffee at REXKL</span></li><li><time>2:15</time><span>Browse BookXcess bookstore</span></li><li><time>3:00</time><span>Late lunch around REXKL</span></li><li><time>3:45</time><span>Walk around Petaling Street</span></li><li><time>4:30</time><span>Central Market & little shops</span></li></ul>
+          <details class="itinerary"><summary>See our afternoon itinerary <span aria-hidden="true">⌄</span></summary><ul class="timeline"><li><time>1:30</time><span>Coffee at REXKL</span></li><li><time>2:15</time><span>Browse BookXcess bookstore</span></li><li><time>3:00</time><span>Late lunch around REXKL</span></li><li><time>3:45</time><span>Walk around Petaling Street</span></li><li><time>4:30</time><span>Central Market & little shops</span></li></ul><a class="map-link" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query=REXKL%2C%20Kuala%20Lumpur">📍 Find this place on Google Maps ↗</a></details>
           <button class="btn secondary choose" type="button" aria-label="Choose Chinatown and REXKL">I like this plan ♡</button></div>
         </article>
         <article class="plan-card" data-plan="The Exchange TRX">
           <div class="plan-art art-2"><span class="art-emoji" aria-hidden="true">🍵🌿</span></div>
           <div class="plan-body"><div class="smallcaps">Plan 02 · Comfy & modern</div><h3>The Exchange TRX</h3><p class="plan-sub">A café date, some window-shopping and a rooftop garden.</p><div class="stats"><span>🕜 1:30–5:00 PM</span><span>✨ Comfy & cute</span></div>
-          <ul class="timeline"><li><time>1:30</time><span>Coffee or matcha</span></li><li><time>2:15</time><span>Explore the mall together</span></li><li><time>3:00</time><span>Late lunch at TRX</span></li><li><time>4:00</time><span>Rooftop park walk</span></li><li><time>4:45</time><span>Chill, chat or take photos</span></li></ul>
+          <details class="itinerary"><summary>See our afternoon itinerary <span aria-hidden="true">⌄</span></summary><ul class="timeline"><li><time>1:30</time><span>Coffee or matcha</span></li><li><time>2:15</time><span>Explore the mall together</span></li><li><time>3:00</time><span>Late lunch at TRX</span></li><li><time>4:00</time><span>Rooftop park walk</span></li><li><time>4:45</time><span>Chill, chat or take photos</span></li></ul><a class="map-link" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query=The%20Exchange%20TRX%2C%20Kuala%20Lumpur">📍 Find this place on Google Maps ↗</a></details>
           <button class="btn secondary choose" type="button" aria-label="Choose The Exchange TRX">I like this plan ♡</button></div>
         </article>
         <article class="plan-card" data-plan="KLCC & Suria KLCC">
           <div class="plan-art art-3"><span class="art-emoji" aria-hidden="true">🏙️🌸</span></div>
           <div class="plan-body"><div class="smallcaps">Plan 03 · Scenic & relaxed</div><h3>KLCC & Suria KLCC</h3><p class="plan-sub">Coffee, a bookstore, a good meal and a park-side stroll.</p><div class="stats"><span>🕑 2:00–5:30 PM</span><span>✨ Views & good vibes</span></div>
-          <ul class="timeline"><li><time>2:00</time><span>Coffee at Suria KLCC</span></li><li><time>2:45</time><span>Browse Kinokuniya bookstore</span></li><li><time>3:30</time><span>Late lunch together</span></li><li><time>4:30</time><span>Walk around KLCC Park</span></li><li><time>5:15</time><span>One last chat or dessert</span></li></ul>
+          <details class="itinerary"><summary>See our afternoon itinerary <span aria-hidden="true">⌄</span></summary><ul class="timeline"><li><time>2:00</time><span>Coffee at Suria KLCC</span></li><li><time>2:45</time><span>Browse Kinokuniya bookstore</span></li><li><time>3:30</time><span>Late lunch together</span></li><li><time>4:30</time><span>Walk around KLCC Park</span></li><li><time>5:15</time><span>One last chat or dessert</span></li></ul><a class="map-link" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query=Suria%20KLCC%2C%20Kuala%20Lumpur">📍 Find this place on Google Maps ↗</a></details>
           <button class="btn secondary choose" type="button" aria-label="Choose KLCC and Suria KLCC">I like this plan ♡</button></div>
         </article>
       </div>
@@ -270,7 +320,16 @@
           <label for="date-choice">📅 Which day works for you?</label>
           <input type="date" id="date-choice" name="chosen_date" required aria-describedby="date-hint" />
           <label class="checkline" for="date-flexible"><input type="checkbox" id="date-flexible" /> Not sure yet — let's decide together</label>
-          <p class="field-hint" id="date-hint">Any day is fine! The afternoon times in the plans are just suggestions.</p>
+          <p class="field-hint" id="date-hint">Any day is fine. Dates and times are suggestions until we confirm in chat.</p>
+          <label for="time-choice">🕑 What time works best? <span class="optional">(Malaysia time)</span></label>
+          <select id="time-choice" name="chosen_time">
+            <option value="13:00">1:00 PM</option>
+            <option value="13:30">1:30 PM</option>
+            <option value="14:00">2:00 PM</option>
+            <option value="14:30">2:30 PM</option>
+            <option value="15:00">3:00 PM</option>
+            <option value="flexible">Let's decide together</option>
+          </select>
           <label for="tiny-note">💬 Anything you want to add? <span class="optional">(optional)</span></label>
           <textarea id="tiny-note" name="note" rows="2" maxlength="250" placeholder="e.g. Can we go a little later? / I vote for dessert 🍰"></textarea>
           <p class="feedback" id="yes-status" role="status" aria-live="polite"></p>
@@ -290,7 +349,7 @@
       </section>
       <div style="text-align:center;margin-top:22px"><button class="quiet" id="back-invite" type="button">← Back to invitation</button></div>
     </section>
-    <p class="footer">Made with 2% rizz, 98% courage, and way too many CSS animations ♡</p>
+    <p class="footer">Made with 98% courage, 2% sleep, and way too many CSS animations ♡</p>
   </main>
 </div>
 <div id="toast" class="hidden" role="status"></div>
@@ -311,6 +370,11 @@
   const invite = document.getElementById('invite');
   const plans = document.getElementById('plans');
   const decline = document.getElementById('decline');
+  const maybe = document.getElementById('maybe');
+  const maybeNote = document.getElementById('maybe-note');
+  const maybeStatus = document.getElementById('maybe-status');
+  const timeChoice = document.getElementById('time-choice');
+  const questHint = document.getElementById('quest-hint');
   const picked = document.getElementById('picked');
   const cards = Array.from(document.querySelectorAll('.plan-card'));
   const dateChoice = document.getElementById('date-choice');
@@ -323,9 +387,24 @@
   let selectedPlan = '';
   let sent = false;
 
+  const updateQuest = () => {
+    const scene = document.body.dataset.scene;
+    const step = scene === 'plans' ? (picked.classList.contains('hidden') ? 2 : 3) : 1;
+    document.querySelectorAll('.quest-step').forEach(el => {
+      const n = Number(el.dataset.step);
+      el.classList.toggle('is-active', n === step && scene !== 'decline' && scene !== 'maybe');
+      el.classList.toggle('is-done', n < step);
+    });
+    questHint.textContent = scene === 'maybe' ? 'Quest on pause · You can always decide together.'
+      : scene === 'decline' ? 'Quest complete · Thanks for being honest.'
+      : step === 1 ? 'Quest 1/3 · A tiny question, absolutely no pressure.'
+      : step === 2 ? 'Quest 2/3 · Choose your preferred adventure.'
+      : 'Quest 3/3 · Pick a day and time that suit you.';
+  };
   const show = target => {
-    [invite, plans, decline].forEach(el => el.classList.toggle('hidden', el !== target));
+    [invite, plans, decline, maybe].forEach(el => el.classList.toggle('hidden', el !== target));
     document.body.dataset.scene = target.id;
+    updateQuest();
     window.scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'});
   };
 
@@ -357,14 +436,18 @@
   const calendarTools = document.getElementById('calendar-tools');
   const googleCalendarLink = document.getElementById('google-calendar-link');
   const calendarEvent = () => {
-    if (!selectedPlan || !SCHEDULES[selectedPlan] || dateFlexible.checked ||
+    if (!selectedPlan || !SCHEDULES[selectedPlan] || dateFlexible.checked || timeChoice.value === 'flexible' ||
         !dateChoice.value || dateChoice.value < dateChoice.min) return null;
     const numbers = dateChoice.value.split('-').map(Number);
     if (numbers.length !== 3 || numbers.some(n => !Number.isFinite(n))) return null;
     const [year,month,day] = numbers;
     const spec = SCHEDULES[selectedPlan];
     const toUtc = clock => new Date(Date.UTC(year,month-1,day,clock[0]-8,clock[1],0));
-    const start = toUtc(spec.start), end = toUtc(spec.end);
+    const timeParts = timeChoice.value.split(':').map(Number);
+    if (timeParts.length !== 2 || timeParts.some(n => !Number.isFinite(n))) return null;
+    const start = toUtc(timeParts);
+    const durationMinutes = (spec.end[0]*60+spec.end[1]) - (spec.start[0]*60+spec.start[1]);
+    const end = new Date(start.getTime()+durationMinutes*60000);
     const title = 'Coffee & a little KL date ♡ — ' + selectedPlan;
     const details = 'Coffee, food and jalan-jalan around KL. Tentative until we confirm together in our chat. (Malaysia time)';
     const url = new URL('https://calendar.google.com/calendar/r/eventedit');
@@ -384,7 +467,7 @@
   const escapeIcs = value => value.replace(/\\/g,'\\\\').replace(/\r?\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');
   function downloadCalendarFile() {
     const event = calendarEvent();
-    if (!event) return toast('Choose a plan and a real date first 📅');
+    if (!event) return toast('Choose a day and a specific time first 📅');
     const uid = `afternoon-date-${event.date}-${selectedPlan.replace(/[^a-z0-9]/gi,'-').toLowerCase()}@date-invitation.local`;
     const lines = [
       'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//A little date invitation//EN',
@@ -403,10 +486,16 @@
     toast('Calendar file ready! Save it in your calendar 📅');
   }
 
+  const formattedTime = () => {
+    if (timeChoice.value === 'flexible') return "Let's decide together";
+    const [hours, minutes] = timeChoice.value.split(':').map(Number);
+    return `${hours % 12 || 12}:${pad2(minutes)} ${hours >= 12 ? 'PM' : 'AM'} (MYT)`;
+  };
   const planReply = () => {
     const when = dateFlexible.checked ? "We can choose the day together" : formattedDay(dateChoice.value);
-    return `Hey! I'd love to go on a date 😊\nPlan: ${selectedPlan}\nDate: ${when}${note.value.trim()?`\nNote: ${note.value.trim()}`:''}`;
+    return `Hey! I'd love to go on a date 😊\nPlan: ${selectedPlan}\nDate: ${when}\nTime: ${formattedTime()}${note.value.trim()?`\nNote: ${note.value.trim()}`:''}`;
   };
+  const maybeReply = () => "Hey! I'm not quite sure about a date yet, but I'd be happy to chat about it first 😊" + (maybeNote.value.trim() ? `\nNote: ${maybeNote.value.trim()}` : '');
   const noReply = () => "Hey, thanks for asking! I don't think a date is for me, but I appreciate the invitation :)";
   const configured = /^https:\/\/formspree\.io\/f\/[a-zA-Z0-9]+$/.test(FORMSPREE_ENDPOINT)
     && !FORMSPREE_ENDPOINT.endsWith('/REPLACE_ME');
@@ -432,7 +521,7 @@
       finally { field.remove(); }
     }
     if (copied) {
-      toast(kind==='no' ? 'Your “No thanks” reply was copied 💌' : 'Your date choice was copied 💗');
+      toast(kind==='no' ? 'Your “No thanks” reply was copied 💌' : kind==='maybe' ? 'Your “Maybe” reply was copied 🫶' : 'Your date choice was copied 💗');
       return;
     }
     const modal = document.getElementById('manual-copy');
@@ -457,13 +546,14 @@
       payload.append('response', reply);
       payload.append('date_plan', plan || 'None');
       payload.append('chosen_date', date || 'Not applicable');
+      payload.append('chosen_time_myt', reply === 'Yes' ? formattedTime() : 'Not applicable');
       payload.append('note', extraNote || '');
       payload.append('subject', 'Date invitation reply — ' + reply.toUpperCase());
       payload.append('chosen_date_iso', reply==='Yes' && !dateFlexible.checked ? dateChoice.value : 'Not set');
       payload.append('time_zone', 'Asia/Kuala_Lumpur (MYT)');
       const event = reply==='Yes' ? calendarEvent() : null;
       payload.append('add_to_my_google_calendar', event ? event.url : 'Not applicable');
-      payload.append('message', reply==='No' ? noReply() : (reply==='Yes' ? planReply() : ''));
+      payload.append('message', reply==='No' ? noReply() : reply==='Maybe' ? maybeReply() : planReply());
       const response = await fetch(FORMSPREE_ENDPOINT, {
         method: 'POST',
         body: payload,
@@ -484,6 +574,7 @@
 
   document.getElementById('yes').addEventListener('click', () => {
     celebrate(window.innerWidth/2,Math.min(window.innerHeight*.46,350),45);
+    popQuip('yes');
     document.getElementById('yes').textContent = 'QUEST ACCEPTED! 🥹';
     window.setTimeout(() => {
       show(plans);
@@ -491,6 +582,10 @@
     }, reduceMotion?0:480);
   });
   document.getElementById('no').addEventListener('click', () => show(decline));
+  document.getElementById('maybe-button').addEventListener('click', () => { show(maybe); toast('No rush, this is not a speedrun 🫶'); });
+  document.getElementById('maybe-back').addEventListener('click', () => show(invite));
+  document.getElementById('send-maybe').addEventListener('click', () => sendReply('Maybe','','',maybeNote.value.trim(),document.getElementById('send-maybe'),maybeStatus));
+  document.getElementById('copy-maybe').addEventListener('click', () => copyReply(maybeReply(),'maybe'));
   document.getElementById('go-back').addEventListener('click', () => show(invite));
   document.getElementById('back-invite').addEventListener('click', () => show(invite));
   cards.forEach(card => card.querySelector('button.choose').addEventListener('click', () => {
@@ -501,7 +596,11 @@
       c.querySelector('button.choose').textContent = active ? 'Selected! ♡' : 'I like this plan ♡';
     });
     document.getElementById('picked-name').textContent = selectedPlan + ' ♡';
+    const selectedSpec = SCHEDULES[selectedPlan];
+    timeChoice.value = `${pad2(selectedSpec.start[0])}:${pad2(selectedSpec.start[1])}`;
     picked.classList.remove('hidden');
+    updateQuest();
+    popQuip('plan');
     updateCalendarTools();
     setStatus(yesStatus, '');
     celebrate(window.innerWidth/2,window.innerHeight*.4,24);
@@ -521,9 +620,11 @@
   document.getElementById('copy-yes').addEventListener('click', () => {
     if (!selectedPlan) return setStatus(yesStatus,'Choose a plan first.','bad');
     if (!dateFlexible.checked && !dateChoice.value) return setStatus(yesStatus,'Choose a date or tick “let’s decide together”.','bad');
+    if (!dateFlexible.checked && dateChoice.value < dateChoice.min) return setStatus(yesStatus,'Please pick a future date.','bad');
     copyReply(planReply());
   });
   document.getElementById('copy-no').addEventListener('click', () => copyReply(noReply(), 'no'));
+  timeChoice.addEventListener('change', () => { updateCalendarTools(); popQuip('time'); });
   document.getElementById('date-choice').addEventListener('input', updateCalendarTools);
   document.getElementById('date-choice').addEventListener('change', updateCalendarTools);
   document.getElementById('download-ics').addEventListener('click', downloadCalendarFile);
@@ -564,6 +665,19 @@
       p.addEventListener('animationend',()=>p.remove(),{once:true});
     }
   }
+  const quips = {
+    yes: ["Confidence.exe has successfully launched 🎉", "Side quest accepted. Very brave of both of us 🥹", "Achievement unlocked: a little adventure 💗"],
+    plan: ["Excellent choice. I definitely did not overthink these options 👀", "Plan selected. The spreadsheets are shaking 📋", "The itinerary has entered the chat ✨"],
+    time: ["Time selected. The calendar is doing its best 🗓️", "Noted! Very professional of us 🫡", "Nice. We have a potential timeline ⏰"]
+  };
+  function popQuip(kind) {
+    const set = quips[kind];
+    if (set) toast(set[Math.floor(Math.random()*set.length)]);
+  }
+  document.getElementById('easter-egg').addEventListener('click', () => {
+    celebrate(window.innerWidth * .75, 65, 22);
+    toast('Secret unlocked: I hope this made you smile a little 🐈');
+  });
   document.getElementById('mail-sticker').addEventListener('click',ev => {
     const r=ev.currentTarget.getBoundingClientRect();
     celebrate(r.left+r.width/2,r.top+r.height/2,18);
@@ -574,6 +688,7 @@
     next.querySelector('.choose').click();
     toast('RNG gods have spoken 🎲');
   });
+  updateQuest();
   if (!reduceMotion && window.matchMedia('(pointer:fine)').matches) {
     cards.forEach(card => {
       card.addEventListener('pointermove',e => {
