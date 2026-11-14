@@ -130,7 +130,7 @@
   yesForm.parentElement.insertBefore(customWrap,yesForm);
   const preview=document.createElement("div");
   preview.id="location-preview";preview.className="location-preview hidden";
-  preview.innerHTML='<h3 id="location-heading">Meeting spot</h3><p class="transit" id="location-transit"></p><iframe id="location-map" title="Map preview of selected date location" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe><div class="map-actions"><a id="location-directions" target="_blank" rel="noopener noreferrer">Open Google Maps ↗</a><a id="location-transit-link" target="_blank" rel="noopener noreferrer">Transit directions ↗</a></div>';
+  preview.innerHTML='<h3 id="location-heading">Meeting spot</h3><p class="transit" id="location-transit"></p><button class="map-preview-button" type="button" id="show-location-map">🗺️ Load map preview</button><iframe id="location-map" title="Map preview of selected date location" loading="lazy" hidden referrerpolicy="no-referrer-when-downgrade"></iframe><div class="map-actions"><a id="location-directions" target="_blank" rel="noopener noreferrer">Open Google Maps ↗</a><a id="location-transit-link" target="_blank" rel="noopener noreferrer">Transit directions ↗</a></div>';
   customWrap.parentElement.insertBefore(preview,yesForm);
   const updateMap=()=>{
     const custom=selectedPlan===suggestedName;
@@ -142,17 +142,34 @@
     $("#location-transit",preview).textContent=info.transit;
     const query=info.search ? encodeURIComponent(info.search) : "";
     const iframe=$("#location-map",preview);
+    const loadMap=$("#show-location-map",preview);
     const dirs=$("#location-directions",preview);
     const transit=$("#location-transit-link",preview);
-    iframe.hidden=!query;
+    const changed = loadMap.dataset.query !== query;
+    loadMap.dataset.query=query;
     dirs.hidden=!query;transit.hidden=!query;
+    if (changed) {
+      iframe.hidden=true;
+      iframe.removeAttribute("src");
+      loadMap.hidden=!query;
+    }
     if(query){
-      const mapUrl="https://maps.google.com/maps?q="+query+"&output=embed";
-      if(iframe.src!==mapUrl)iframe.src=mapUrl;
       dirs.href="https://www.google.com/maps/search/?api=1&query="+query;
       transit.href="https://www.google.com/maps/dir/?api=1&destination="+query+"&travelmode=transit";
-    }else{iframe.removeAttribute("src");}
+    }else {
+      loadMap.hidden=true;
+      iframe.hidden=true;
+      iframe.removeAttribute("src");
+    }
   };
+  $("#show-location-map",preview).addEventListener("click",()=>{
+    const button=$("#show-location-map",preview);
+    if(!button.dataset.query)return;
+    const iframe=$("#location-map",preview);
+    iframe.src="https://maps.google.com/maps?q="+button.dataset.query+"&output=embed";
+    iframe.hidden=false;
+    button.hidden=true;
+  });
   const selectCustom=()=>{
     selectedPlan=suggestedName;
     cards.forEach(card=>{
