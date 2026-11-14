@@ -1,0 +1,74 @@
+
+/* V8: location photos, mini-game prize, mobile cards, map, theme */
+:root{--v8-ink:#39312f;--v8-muted:#7e706d}
+header{gap:10px;flex-wrap:wrap}
+#theme-toggle{border:1px solid #e6ced1;background:#fffafc;color:#9c6577;border-radius:999px;padding:9px 13px;min-height:40px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:0;text-transform:none}
+#theme-toggle:hover{transform:translateY(-1px)}
+.plan-art.photo-active{height:185px;min-height:185px;isolation:isolate}
+.photo-gallery{position:absolute;inset:0;z-index:3;overflow:hidden}
+.photo-gallery img{position:absolute;width:100%;height:100%;inset:0;object-fit:cover;opacity:0;transition:opacity .35s ease;display:block}
+.photo-gallery img.active.loaded{opacity:1}
+.photo-gallery:before{content:"";position:absolute;inset:55% 0 0;background:linear-gradient(transparent,#2415227d);z-index:1;pointer-events:none}
+.photo-nav{position:absolute;top:50%;z-index:4;transform:translateY(-50%);border:1px solid #fff8;background:#ffffffda;color:#714657;border-radius:50%;width:34px;height:34px;font-size:19px;display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 12px #0002}
+.photo-nav.previous{left:9px}.photo-nav.next{right:9px}
+.photo-caption{position:absolute;left:11px;right:11px;bottom:8px;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:6px;color:white;font-size:10px;text-shadow:0 1px 4px #000b}
+.photo-caption a{color:#fff;text-decoration:underline}
+.photo-caption span{font-weight:700}
+.custom-card .plan-art{background:linear-gradient(135deg,#fce7bc,#f4d8f5,#cee8ef)}
+.custom-location-wrap{border-radius:14px;padding:14px;margin:13px auto 18px;background:#fff8f5;border:1px solid #f1dcd9;text-align:left}
+.custom-location-wrap label{font-size:13px;font-weight:700;display:block;margin-bottom:7px;color:#855b6e}
+.custom-location-wrap input{width:100%;box-sizing:border-box;border:1px solid #e1c8ce;background:#fff;color:#45383a;border-radius:11px;padding:12px;font:inherit}
+.custom-location-wrap small{color:#9c7b87;display:block;margin-top:7px;font-size:11px;line-height:1.45}
+.location-preview{margin:14px auto 19px;max-width:530px;background:#fff8f4;border:1px solid #e9d6d6;border-radius:17px;padding:12px;text-align:left}
+.location-preview h3{font:700 14px 'DM Sans',sans-serif!important;margin:2px 0 6px}
+.location-preview .transit{font-size:12px;color:#8b707d;margin:0 0 10px}
+.location-preview iframe{width:100%;height:198px;border:0;border-radius:12px;background:#efddde}
+.location-preview .map-actions{display:flex;gap:9px;justify-content:flex-start;margin-top:9px;flex-wrap:wrap}
+.location-preview .map-actions a{font-size:12px;color:#a35373;text-decoration:underline;text-underline-offset:3px;padding:6px 0}
+#mobile-plan-controls{display:none}
+#arcade-skip{position:sticky;top:9px;z-index:25;float:right;border:1px solid #ead2d7;color:#ae6781;background:#fffdfdee;border-radius:999px;min-height:35px;padding:6px 13px;font-size:11px;font-weight:700}
+.arcade-prize .coupon{background:#fff;border:1px dashed #dc99ab;border-radius:14px;margin:13px 0 7px;padding:10px 12px;color:#996175;font-size:12px;line-height:1.55}
+.arcade-prize .coupon b{display:block;font-size:16px}
+.arcade-prize .coupon small{font-size:10px;display:block;font-weight:400}
+.arcade-prize .coupon button{margin-top:9px;border:1px solid #dfafbc;color:#a46079;border-radius:10px;background:white;padding:8px 12px;font-weight:700;font-size:12px;cursor:pointer}
+.confirmation-card{text-align:center;background:rgba(255,255,255,.94);border:1px solid #fff;border-radius:29px;box-shadow:var(--shadow);padding:52px 25px 42px;max-width:760px;margin:16px auto}
+.confirmation-card h2{font-size:clamp(35px,6vw,57px);margin:8px auto}
+.confirmation-card p{line-height:1.75;color:var(--muted);font-size:14px;max-width:540px;margin:12px auto}
+.confirmation-summary{background:#fff8f5;padding:18px 20px;border-radius:16px;margin:22px auto;max-width:520px;text-align:left;color:#7b5d68;font-size:14px;line-height:1.8;white-space:pre-wrap;border:1px solid #eed6d8}
+.confirmation-card .actions{margin:20px 0}
+#confirmation-calendar{display:none}
+#photo-credits{max-width:780px;margin:24px auto 0;text-align:center;font-size:11px;color:#9a808b}
+#photo-credits summary{cursor:pointer}
+#photo-credits a{color:inherit}
+@media(max-width:780px){
+  .plan-art.photo-active{height:100%;min-height:270px}
+  .photo-gallery{border-radius:17px 0 0 17px}
+}
+@media(max-width:530px){
+  header{padding-bottom:12px}#theme-toggle{margin-left:auto;max-width:100%;font-size:11px}
+  .plan-grid{max-width:none!important;display:flex!important;flex-wrap:nowrap;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:13px;padding:7px 13px 22px;margin:0 -13px!important;-webkit-overflow-scrolling:touch}
+  .plan-grid .plan-card{display:flex!important;flex:0 0 min(82vw,335px);width:min(82vw,335px);scroll-snap-align:center;align-self:stretch;min-width:0}
+  .plan-art.photo-active{height:163px;min-height:163px}
+  .photo-gallery{border-radius:18px 18px 0 0}
+  #mobile-plan-controls{display:flex;justify-content:center;gap:14px;align-items:center;margin:0 0 14px}
+  #mobile-plan-controls button{border:1px solid #e3c9d1;background:#fffaf9;color:#9c617a;min-width:45px;min-height:42px;border-radius:999px;font-size:19px}
+  #mobile-plan-controls span{font-size:12px;font-weight:700;color:#987783}
+  .location-preview iframe{height:180px}.confirmation-card{padding:43px 17px 31px}
+}
+html[data-theme="night"]{color-scheme:dark}
+html[data-theme="night"] body{background:radial-gradient(ellipse at 2% 4%,#533347,transparent 41%),radial-gradient(ellipse at 96% 93%,#42335c,transparent 42%),#201c2b;color:#fbedf4}
+html[data-theme="night"] .invitation,html[data-theme="night"] .arcade-shell,html[data-theme="night"] .confirmation-card,html[data-theme="night"] .plan-card,html[data-theme="night"] .picked,html[data-theme="night"] .quest-track{background:#312739f2;border-color:#71566c;box-shadow:0 20px 48px #120c1a55;color:#f7e9f1}
+html[data-theme="night"] .plan-body,html[data-theme="night"] .copy-overlay-card{background:#312739}
+html[data-theme="night"] .secondary,html[data-theme="night"] #theme-toggle,html[data-theme="night"] #mobile-plan-controls button,html[data-theme="night"] #arcade-skip{background:#45334a;color:#f0dbe5;border-color:#78576e}
+html[data-theme="night"] .lede,html[data-theme="night"] .plan-sub,html[data-theme="night"] .sectionhead p,html[data-theme="night"] .confirmation-card p,html[data-theme="night"] .picked p{color:#d6bfcf}
+html[data-theme="night"] .itinerary,html[data-theme="night"] .location-preview,html[data-theme="night"] .custom-location-wrap,html[data-theme="night"] .confirmation-summary,html[data-theme="night"] .calendar-tools{background:#392d42;border-color:#6d5369;color:#eedce8}
+html[data-theme="night"] .reply-form input,html[data-theme="night"] .reply-form textarea,html[data-theme="night"] .reply-form select,html[data-theme="night"] .maybe-note-wrap textarea,html[data-theme="night"] .custom-location-wrap input,html[data-theme="night"] .copy-overlay-card textarea{background:#32263a;color:#ffedf8;border-color:#78556d}
+html[data-theme="night"] .timeline .stage-num,html[data-theme="night"] .itinerary summary,html[data-theme="night"] .itinerary .map-link{background:#4c3850;color:#f7b8d2}
+html[data-theme="night"] .arcade-prize,html[data-theme="night"] .arcade-prize .coupon{background:#45344b;color:#ffeaf3;border-color:#bb879e}
+html[data-theme="night"] .photo-caption a{color:white}
+html[data-theme="night"] header,html[data-theme="night"] .quest-hint,html[data-theme="night"] .stats{color:#e1c5d7}
+html[data-theme="night"] .location-preview .transit,html[data-theme="night"] .custom-location-wrap small{color:#d7b8ce}
+html[data-theme="night"] .plan-card.chosen{border-color:#e99abc}
+html[data-theme="night"] .footer{color:#c6aac0}
+html[data-theme="night"] .claw-stage{border-color:#a37b9e;background:radial-gradient(circle at 45% 20%,#5b4665,#3b314e)}
+@media(prefers-reduced-motion:reduce){.photo-gallery img{transition:none!important}}
