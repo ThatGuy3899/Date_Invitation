@@ -16,64 +16,104 @@
   // Photographer details and licensing are linked to the original Commons file pages.
   const commons = file => "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(file) + "?width=900";
   const credits = file => "https://commons.wikimedia.org/wiki/File:" + encodeURIComponent(file);
+  // Original Wikimedia Commons file pages provide author and full licence details.
+  // Each credit also names the creator and the licence in the visible gallery.
   const photoSets = {
     "REXKL & Central Market":[
-      ["Central Market exterior","Central_Market_Kuala_Lumpur.jpg"],
-      ["Inside Central Market","Interior_of_Central_Market,_Kuala_Lumpur.jpg"]
+      ["Central Market exterior","Central_Market_Kuala_Lumpur.jpg","Aumars","CC BY-SA 4.0"],
+      ["Inside Central Market","Interior_of_Central_Market,_Kuala_Lumpur.jpg","Wee Hong","CC BY-SA 4.0"]
     ],
     "The Exchange TRX":[
-      ["TRX City Park","TRX_City_Park_at_The_Exchange_TRX_(23.12.02).jpg"],
-      ["The Exchange TRX","The_Exchange_TRX_20231216_(1).jpg"]
+      ["TRX City Park","TRX_City_Park_at_The_Exchange_TRX_(23.12.02).jpg","LegendaryLim","CC0"],
+      ["The Exchange TRX","The_Exchange_TRX_20231216_(1).jpg","InterEdit88","CC0"]
     ],
     "KLCC & Suria KLCC":[
-      ["Suria KLCC","Suria_KLCC_2023_01.jpg"],
-      ["Suria KLCC complex","Suria_KLCC_2023_02.jpg"]
+      ["Suria KLCC","Suria_KLCC_2023_01.jpg","Pangalau","CC BY-SA 4.0"],
+      ["Suria KLCC complex","Suria_KLCC_2023_02.jpg","Pangalau","CC BY-SA 4.0"]
     ],
     "118 Mall & Merdeka 118":[
-      ["118 Mall and Merdeka 118","118_Mall_from_Jalan_Hang_Jebat.jpg"],
-      ["118 Mall MRT connection","Merdeka_MRT_Station_entrance_to_118_Mall_(261101).jpg"]
+      ["118 Mall and Merdeka 118","118_Mall_from_Jalan_Hang_Jebat.jpg","Wlsrudals","CC0"],
+      ["118 Mall MRT connection","Merdeka_MRT_Station_entrance_to_118_Mall_(261101).jpg","*angys*","CC BY-SA 4.0"]
     ]
   };
-  // 1. Real location pictures with small accessible slideshows.
+  // Load only the current gallery photo. Next photos are fetched when selected.
+  // Keep the original emoji art visible if an image fails to load.
   for (const card of $$(".plan-card")) {
     const set = photoSets[card.dataset.plan];
     if (!set) continue;
     const art = $(".plan-art", card);
     const gallery = document.createElement("div");
     gallery.className = "photo-gallery";
+    gallery.setAttribute("role","group");
+    gallery.setAttribute("aria-label",card.dataset.plan + " photographs");
     const images = set.map(([alt,file],i) => {
       const img = document.createElement("img");
-      img.alt = alt; img.src = commons(file); img.loading = "lazy"; img.decoding = "async";
-      img.className = i===0 ? "active" : "";
-      img.addEventListener("load",()=>{img.classList.add("loaded");});
-      img.addEventListener("error",()=>{img.classList.remove("loaded");});
+      img.alt = alt;
+      img.dataset.src = commons(file);
+      img.loading = "lazy";
+      img.decoding = "async";
       gallery.appendChild(img);
       return img;
     });
-    let index=0;
+    const failed = new Set();
+    let index = 0;
     const caption = document.createElement("div");
     caption.className = "photo-caption";
     const captionText = document.createElement("span");
+    captionText.setAttribute("aria-live","polite");
     const credit = document.createElement("a");
-    credit.target="_blank"; credit.rel="noopener noreferrer"; credit.textContent="Photo credit ↗";
+    credit.target = "_blank";
+    credit.rel = "noopener noreferrer";
     const sync = () => {
-      images.forEach((im,i)=>im.classList.toggle("active",i===index));
-      captionText.textContent=set[index][0];
-      credit.href=credits(set[index][1]);
+      images.forEach((img,i) => img.classList.toggle("active",i===index));
+      const [alt,file,author,licence] = set[index];
+      captionText.textContent = alt;
+      credit.href = credits(file);
+      credit.textContent = author + " · " + licence + " ↗";
+      credit.setAttribute("aria-label","Photo by " + author + ", " + licence + ". Open source and licence details");
+      if (!images[index].getAttribute("src")) images[index].src=images[index].dataset.src;
     };
+    images.forEach((img,i)=>{
+      img.addEventListener("load",()=>img.classList.add("loaded"));
+      img.addEventListener("error",()=>{
+        failed.add(i);
+        img.classList.remove("loaded");
+        if (i===index) {
+          const next = images.findIndex((_,other)=>!failed.has(other));
+          if(next>=0){index=next;sync();}
+          else {
+            gallery.hidden=true;
+            art.classList.remove("photo-active");
+            art.querySelector(".art-emoji").setAttribute("aria-hidden","false");
+            art.setAttribute("title","Photo unavailable. This location is still selectable.");
+          }
+        }
+      });
+    });
     caption.append(captionText,credit);
     for (const [className,delta,text] of [["previous",-1,"‹"],["next",1,"›"]]) {
       const btn=document.createElement("button");
       btn.type="button";btn.className="photo-nav "+className;btn.textContent=text;
       btn.setAttribute("aria-label",delta>0?"Next location photo":"Previous location photo");
-      btn.addEventListener("click",event=>{event.stopPropagation();index=(index+delta+set.length)%set.length;sync();});
+      btn.addEventListener("click",event=>{
+        event.stopPropagation();
+        let candidate=index;
+        for (let attempt=0;attempt<set.length;attempt++){
+          candidate=(candidate+delta+set.length)%set.length;
+          if(!failed.has(candidate))break;
+        }
+        if(!failed.has(candidate)){index=candidate;sync();}
+      });
       gallery.appendChild(btn);
     }
-    gallery.appendChild(caption);art.appendChild(gallery);art.classList.add("photo-active");sync();
+    gallery.appendChild(caption);
+    art.appendChild(gallery);
+    art.classList.add("photo-active");
+    sync();
   }
   const creditsDetail=document.createElement("details");
   creditsDetail.id="photo-credits";
-  creditsDetail.innerHTML="<summary>About the location photos ♡</summary><p>Images are linked from Wikimedia Commons. Tap “Photo credit” on each picture to see its author, original file and licence. Gallery photos may show earlier visits; opening hours and individual shops can change.</p>";
+  creditsDetail.innerHTML='<summary>About the location photos ♡</summary><p>Photos are hosted by Wikimedia Commons. The author and licence are displayed on each image and link to its source file. Licences: <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> and <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>. Photos may show earlier visits and shops can change.</p>';
   const footer=$(".footer");footer.parentElement.insertBefore(creditsDetail,footer);
   // 2. Respect the choice: custom suggestions are separate from the existing four.
   SCHEDULES[suggestedName] = {durationMinutes:150,location:""};
@@ -186,9 +226,14 @@
   // 6. Confirmation only after Formspree really reports success.
   const confirmation=document.createElement("section");confirmation.id="confirmation";confirmation.className="confirmation-card hidden in";
   confirmation.setAttribute("aria-label","Answer sent successfully");
-  confirmation.innerHTML='<div class="top-illustration" aria-hidden="true">📬</div><div class="eyebrow">Message delivered · quest complete!</div><h2 id="confirmation-title">Your answer was sent ♡</h2><p id="confirmation-desc">Thanks for taking the time to reply.</p><div id="confirmation-summary" class="confirmation-summary"></div><div class="actions"><a href="#" target="_blank" rel="noopener noreferrer" id="confirmation-calendar" class="btn secondary">Add to Google Calendar ↗</a><button type="button" id="confirmation-restart" class="btn primary">Back to the invitation ♡</button></div><p>I will follow up in our dating-app chat. Nothing is booked until we confirm together.</p>';
+  confirmation.innerHTML='<div class="top-illustration" aria-hidden="true">📬</div><div class="eyebrow">Message submitted · quest complete!</div><h2 id="confirmation-title" tabindex="-1">Your answer was sent ♡</h2><p id="confirmation-desc">Thanks for taking the time to reply.</p><div id="confirmation-summary" class="confirmation-summary"></div><p id="confirmation-footnote">Nothing is booked until we confirm together.</p><div class="actions"><a href="#" target="_blank" rel="noopener noreferrer" id="confirmation-calendar" class="btn secondary">Add to Google Calendar ↗</a><button type="button" id="confirmation-restart" class="btn secondary">Change my answer ✎</button></div><p class="confirmation-update-note">Need to correct something? Changing your answer sends a new, clearly labelled update. It does not delete the first message.</p>';
   footer.parentElement.insertBefore(confirmation,footer);
-  $("#confirmation-restart").addEventListener("click",()=>{confirmation.classList.add("hidden");show(invite);});
+  $("#confirmation-restart").addEventListener("click",()=>{
+    if (typeof reopenResponseForEdit !== "function" || !reopenResponseForEdit()) return;
+    shownConfirmation=false;
+    confirmation.classList.add("hidden");
+    show(invite);
+  });
   let shownConfirmation=false;
   const displayConfirmation=response=>{
     if(shownConfirmation)return;
@@ -200,13 +245,15 @@
     questHint.textContent="Quest complete · Thanks for sending your answer.";
     const yes=response==="Yes",maybe=response==="Maybe";
     $("#confirmation-title").textContent=yes?"Your date idea has been sent! 💗":maybe?"Message sent, no rush 🫶":"Thank you for answering 🌷";
-    $("#confirmation-desc").textContent=yes?"I've received the plan you chose. We can confirm the details together in our chat.":maybe?"We can keep chatting and decide together whenever it feels right.":"Thanks for letting me know. No pressure at all.";
+    $("#confirmation-desc").textContent=yes?"Your choice was submitted. We can confirm the details together in our chat.":maybe?"Your message was submitted. We can keep chatting and see what feels right.":"Your answer was submitted. Thanks for letting me know.";
+    $("#confirmation-footnote").textContent=yes?"Nothing is booked until we both confirm in chat.":maybe?"No rush — we can keep things relaxed.":"No pressure to explain or change your mind.";
     const details=yes ? "Plan: "+selectedPlan+"\nPlace: "+(selectedPlan===suggestedName ? safeText(customInput.value)||"To be decided" : locationInfo[selectedPlan]?.where||selectedPlan)+"\nDate: "+(dateFlexible.checked?"To be decided":formattedDay(dateChoice.value))+"\nTime: "+formattedTime() : maybe ? "Response: Maybe\nNote: "+(safeText($("#maybe-note").value)||"None") : "Response: No, thank you";
     $("#confirmation-summary").textContent=details;
     const event=yes?calendarEvent():null;
     const link=$("#confirmation-calendar");
     if(event){link.style.display="inline-flex";link.href=event.url;}else{link.style.display="none";link.removeAttribute("href");}
     window.scrollTo({top:0,behavior:reduceMotion?"auto":"smooth"});
+    $("#confirmation-title").focus({preventScroll:true});
     if(yes)celebrate(window.innerWidth/2,window.innerHeight*.5,28);
   };
   for(const [type,id] of [["Yes","yes-status"],["Maybe","maybe-status"],["No","no-status"]]){
