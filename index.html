@@ -290,6 +290,7 @@
   <link rel="stylesheet" href="enhancements.css" />
 </head>
 <body data-scene="invite">
+<a class="skip-to-invitation" href="#main-content">Skip to invitation</a>
 <div class="ambient" aria-hidden="true">
   <span class="floatie floatie-a">✳</span><span class="floatie floatie-b">♡</span>
   <span class="floatie floatie-c">✿</span><span class="floatie floatie-d">✦</span>
@@ -307,15 +308,16 @@
     </div>
     <p class="quest-hint" id="quest-hint" aria-live="polite">Quest 1/4 · A tiny question, absolutely no pressure.</p>
   </nav>
-  <main>
+  <main id="main-content">
     <section class="invitation in" id="invite" aria-label="Date invitation">
       <button class="top-illustration mail-sticker" id="mail-sticker" type="button" aria-label="Tap the envelope for a surprise" title="Psst... tap me!">💌<span class="tap-hint">tap me!</span></button>
       <div class="eyebrow"><span class="eyebrow-sparkle">✧</span> SIDE QUEST UNLOCKED · A tiny question <span class="eyebrow-sparkle">✧</span></div>
       <h1>Would you like to go on a <span class="rose">date</span> with me?</h1>
-      <p class="lede">Maybe coffee, good food and a little jalan-jalan around KL? I made a tiny website because apparently just asking normally was too easy 🫠</p>
+      <p class="lede">Coffee, good food and a little jalan-jalan around KL? I made a tiny website because apparently just asking normally was too easy 🫠</p>
+      <p class="personal-note">I thought it would be nice to spend some time together and get to know you better in person. No pressure though — I just wanted to ask properly :)</p>
       <div class="pills"><span class="pill">☕ Coffee</span><span class="pill">🌤️ An afternoon together</span><span class="pill">📍 Kuala Lumpur</span></div>
       <div class="actions invite-actions"><button class="btn primary" id="yes" type="button">Yes, I'd love to ♡</button><button class="btn secondary" id="maybe-button" type="button">Maybe, let's chat 🫶</button><button class="btn secondary" id="no" type="button">No, thank you</button></div>
-      <p class="under">No pressure at all, promise :) <span class="little-heart" aria-hidden="true">♡</span></p>
+      <p class="under">Whatever you choose is totally okay :) <span class="little-heart" aria-hidden="true">♡</span></p>
     </section>
     <section class="invitation hidden in" id="decline" aria-label="Thanks for answering">
       <div class="top-illustration" aria-hidden="true">🌷</div><div class="eyebrow">Quest declined · All good!</div>
@@ -487,6 +489,7 @@
   const celebrationLayer = document.getElementById('celebrations');
   let selectedPlan = '';
   let sent = false;
+  let answerRevision = 0; // A deliberate correction sends another Formspree entry; it does not erase the first.
 
   const updateQuest = () => {
     const scene = document.body.dataset.scene;
@@ -607,6 +610,19 @@
     element.textContent = message;
     element.className = 'feedback' + (type ? ' ' + type : '');
   }
+  function reopenResponseForEdit() {
+    // Called only from the explicit Change my answer button on the confirmation.
+    if (!sent) return false;
+    sent = false;
+    answerRevision++;
+    ['send-yes','send-maybe','send-no'].forEach(id => {
+      const button = document.getElementById(id);
+      button.disabled = false;
+      button.textContent = id === 'send-yes' ? 'Send my pick 💌' : 'Send my answer 💌';
+    });
+    [yesStatus,maybeStatus,noStatus].forEach(element => setStatus(element, ''));
+    return true;
+  }
 
   async function copyReply(value, kind='reply') {
     let copied = false;
@@ -635,7 +651,10 @@
   }
 
   async function sendReply(reply, plan, date, extraNote, button, statusElement) {
-    if (sent) return;
+    if (sent) {
+      setStatus(statusElement,'You already sent an answer. Use “Change my answer” on your confirmation screen if you want to send an update.','bad');
+      return;
+    }
     if (!configured) {
       setStatus(statusElement,'Email notifications are not set up yet. Please use “Copy reply” and send it in our chat 💬','bad');
       return;
@@ -652,25 +671,37 @@
       payload.append('chosen_date', date || 'Not applicable');
       payload.append('chosen_time_myt', reply === 'Yes' ? formattedTime() : 'Not applicable');
       payload.append('note', extraNote || '');
-      payload.append('subject', 'Date invitation reply — ' + reply.toUpperCase());
+      payload.append('subject', (answerRevision ? 'UPDATED date invitation reply — ' : 'Date invitation reply — ') + reply.toUpperCase());
+      payload.append('reply_update', answerRevision ? 'UPDATED ANSWER — please use this answer instead of earlier submissions' : 'Original answer');
+      payload.append('reply_version', String(answerRevision + 1));
       payload.append('chosen_date_iso', reply==='Yes' && !dateFlexible.checked ? dateChoice.value : 'Not set');
       payload.append('time_zone', 'Asia/Kuala_Lumpur (MYT)');
       const event = reply==='Yes' ? calendarEvent() : null;
       payload.append('add_to_my_google_calendar', event ? event.url : 'Not applicable');
-      payload.append('message', reply==='No' ? noReply() : reply==='Maybe' ? maybeReply() : planReply());
+      payload.append('message', (answerRevision ? '[UPDATED ANSWER — this replaces my earlier reply]\n' : '') + (reply==='No' ? noReply() : reply==='Maybe' ? maybeReply() : planReply()));
       const response = await fetch(FORMSPREE_ENDPOINT, {
         method: 'POST',
         body: payload,
         headers: { 'Accept': 'application/json' }
       });
-      if (!response.ok) throw new Error('Submission failed ('+response.status+')');
+      if (!response.ok) {
+        const err = new Error('Submission failed');
+        err.status = response.status;
+        throw err;
+      }
       sent = true;
       setStatus(statusElement, 'Sent successfully! Thank you for replying 💗','ok');
       button.textContent = 'Sent ✓';
       button.disabled = true;
       celebrate(window.innerWidth / 2, window.innerHeight / 2, reply==='Yes'?30:8);
     } catch (e) {
-      setStatus(statusElement, 'Couldn’t send right now. Try again or use “Copy reply” in our dating-app chat.','bad');
+      let reason = 'Something went wrong while sending.';
+      if (navigator.onLine === false) reason = 'It looks like you are offline.';
+      else if (e.status === 429) reason = 'Too many attempts in a short time. Please try again later.';
+      else if (e.status === 422 || e.status === 400) reason = 'The form could not accept this response.';
+      else if (e.status === 403 || e.status === 404) reason = 'The reply service is currently unavailable.';
+      else if (e.status >= 500) reason = 'The reply service is having trouble.';
+      setStatus(statusElement, reason + ' Your choices are still here. Try again, or use “Copy reply” to send it in our chat.','bad');
       button.disabled = false;
       button.textContent = previousLabel;
     }
