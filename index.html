@@ -242,6 +242,38 @@
     .timeline .stage-num{width:24px;height:24px;display:inline-grid;place-items:center;border-radius:50%;background:#fff0f3;color:#b56579;font-weight:700;font-size:11px}
     .timeline li{grid-template-columns:30px minmax(0,1fr);align-items:center}
     @media(min-width:781px){.plan-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-width:790px;margin:auto}}
+
+/* Cute, optional arcade game; touch, keyboard and reduced motion support */
+.quest-steps{grid-template-columns:repeat(4,minmax(0,1fr))}
+.arcade-shell{max-width:780px;box-sizing:border-box;margin:14px auto 0;padding:29px 24px;text-align:center;background:#fffdfbf2;border:1px solid #f2d9e0;border-radius:27px;box-shadow:var(--shadow)}
+.arcade-shell h2{font-size:clamp(32px,5vw,47px);margin:10px 0}
+.arcade-subtitle{color:var(--muted);max-width:530px;margin:0 auto 20px;font-size:14px;line-height:1.75}
+.arcade-console{max-width:475px;margin:auto}
+.arcade-info{display:flex;justify-content:space-between;gap:8px;margin:0 5px 9px;font-size:12px;font-weight:700;color:#96687b}
+.claw-stage{--claw-x:50%;--claw-depth:10%;height:265px;position:relative;overflow:hidden;border:8px solid #f5c0d4;border-bottom:15px solid #d897b2;border-radius:22px;background:radial-gradient(circle at 27% 17%,#fffbee,#fff1f5 50%,#f4dce8);box-shadow:inset 0 0 0 2px #fff8,0 12px 24px #875a801c;outline-offset:4px}
+.claw-stage:before{content:'✦       ✧       ✦       ✧';position:absolute;top:30%;left:0;right:0;font-size:24px;color:#e5bfd0;opacity:.7;pointer-events:none}
+.claw-stage:after{content:'';position:absolute;z-index:4;bottom:0;left:0;right:0;height:34px;background:linear-gradient(#f4b9d0,#e19ab8)}
+.claw-rail{position:absolute;top:0;left:0;right:0;height:9px;background:repeating-linear-gradient(90deg,#fff0f8 0 19px,#e5a3bb 19px 35px);z-index:6}
+.claw-rope{position:absolute;top:0;left:var(--claw-x);height:var(--claw-depth);width:4px;transform:translateX(-50%);background:linear-gradient(90deg,#917a95,#f8e2ec,#917a95);transition:left .2s,height .7s}
+.claw-arm{position:absolute;z-index:8;left:var(--claw-x);top:var(--claw-depth);width:64px;height:60px;transform:translate(-50%,-2px);transition:left .2s,top .7s}
+.claw-cap{display:block;margin:auto;width:30px;height:17px;background:#aa92ae;border:2px solid #86708d;border-radius:8px 8px 12px 12px}
+.claw-prongs{position:absolute;left:9px;top:15px;width:46px;display:flex;justify-content:space-between}
+.claw-prong{height:30px;width:17px;border:4px solid #988497;border-top:0;border-radius:0 0 13px 13px}
+.claw-prong.left{border-right:0;transform:rotate(-19deg)}
+.claw-prong.right{border-left:0;transform:rotate(19deg)}
+.claw-held{position:absolute;top:32px;left:50%;transform:translateX(-50%);font-size:30px}
+.claw-toy{position:absolute;z-index:2;left:var(--toy-x);bottom:29px;font-size:43px;line-height:1.1;transform:translateX(-50%);filter:drop-shadow(0 4px 3px #92758d40);transition:opacity .2s,transform .2s;user-select:none}
+.claw-toy.caught{opacity:0;transform:translate(-50%,-20px) scale(.5)}
+.arcade-controls{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:9px;margin-top:15px}
+.arcade-controls .btn{min-width:0;min-height:53px;width:100%;padding:11px 5px;touch-action:manipulation;font-size:13px}
+.arcade-status{font-size:13px;line-height:1.6;color:#936978;min-height:45px;display:grid;place-items:center}
+.arcade-prize{background:#fff3eb;border:1px dashed #d5a1b2;border-radius:17px;padding:14px;margin:5px auto 14px;color:#916173;font-weight:700;line-height:1.5}
+.arcade-prize strong{font-size:37px;display:block;animation:emojiDance 2s ease-in-out infinite}
+.arcade-next{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px auto}
+.arcade-next .btn{min-width:175px}
+.arcade-hint{font-size:11px;color:#9c868a;line-height:1.6;margin:15px 0}
+@media(max-width:530px){.quest-step{white-space:normal;flex-direction:column;text-align:center;line-height:1.2}.quest-steps{gap:3px}.arcade-shell{padding:23px 13px}.claw-stage{height:230px;border-width:6px;border-bottom-width:14px}.claw-toy{font-size:35px}.arcade-controls .btn{font-size:12px;padding:10px 3px}.arcade-next .btn{width:100%}}
+@media(prefers-reduced-motion:reduce){.claw-rope,.claw-arm,.claw-toy{transition:none!important}.arcade-prize strong{animation:none!important}}
   </style>
 </head>
 <body data-scene="invite">
@@ -256,10 +288,11 @@
   <nav class="quest-track" aria-label="Little date quest progress">
     <div class="quest-steps">
       <div class="quest-step is-active" data-step="1"><span class="step-num">01</span><span>Say hello</span></div>
-      <div class="quest-step" data-step="2"><span class="step-num">02</span><span>Choose a plan</span></div>
-      <div class="quest-step" data-step="3"><span class="step-num">03</span><span>Pick a date</span></div>
+      <div class="quest-step" data-step="2"><span class="step-num">02</span><span>Mini game</span></div>
+      <div class="quest-step" data-step="3"><span class="step-num">03</span><span>Choose a plan</span></div>
+      <div class="quest-step" data-step="4"><span class="step-num">04</span><span>Pick a date</span></div>
     </div>
-    <p class="quest-hint" id="quest-hint" aria-live="polite">Quest 1/3 · A tiny question, absolutely no pressure.</p>
+    <p class="quest-hint" id="quest-hint" aria-live="polite">Quest 1/4 · A tiny question, absolutely no pressure.</p>
   </nav>
   <main>
     <section class="invitation in" id="invite" aria-label="Date invitation">
@@ -292,6 +325,37 @@
       <div class="actions"><button class="btn primary" id="send-maybe" type="button">Send my answer 💌</button><button class="btn secondary" id="copy-maybe" type="button">Copy reply</button></div>
       <p class="feedback" id="maybe-status" role="status" aria-live="polite"></p>
       <button class="quiet" id="maybe-back" type="button">← Back to the question</button>
+    </section>
+
+    <section class="arcade-shell hidden in" id="arcade" aria-label="Optional mini claw machine">
+      <div class="eyebrow">Bonus quest unlocked · 100% optional 🎮</div>
+      <h2 id="arcade-title" tabindex="-1">Tiny <span class="rose">claw machine</span> 🧸</h2>
+      <p class="arcade-subtitle">Three tries to win a virtual plushie. The prize is imaginary, but the questionable engineering is real. You can skip whenever you like.</p>
+      <div class="arcade-console">
+        <div class="arcade-info"><span>🕹️ Plushie Arcade</span><span id="claw-tries">3 tries left</span></div>
+        <div class="claw-stage" id="claw-stage" role="group" tabindex="0" aria-label="Claw machine. Use arrow keys left and right, space to drop. Or use the buttons below.">
+          <div class="claw-rail" aria-hidden="true"></div>
+          <div class="claw-rope" aria-hidden="true"></div>
+          <div class="claw-arm" aria-hidden="true"><span class="claw-cap"></span><div class="claw-prongs"><span class="claw-prong left"></span><span class="claw-prong right"></span></div><span class="claw-held" id="claw-held"></span></div>
+          <span class="claw-toy" style="--toy-x:16%" data-x="16" aria-hidden="true">🐼</span>
+          <span class="claw-toy" style="--toy-x:38%" data-x="38" aria-hidden="true">🐱</span>
+          <span class="claw-toy" style="--toy-x:62%" data-x="62" aria-hidden="true">🧸</span>
+          <span class="claw-toy" style="--toy-x:84%" data-x="84" aria-hidden="true">🐰</span>
+        </div>
+        <div class="arcade-controls">
+          <button type="button" class="btn secondary" id="claw-left" aria-label="Move claw left">◀ Left</button>
+          <button type="button" class="btn secondary" id="claw-right" aria-label="Move claw right">Right ▶</button>
+          <button type="button" class="btn primary" id="claw-drop">Drop! 🕹️</button>
+        </div>
+        <p id="claw-status" class="arcade-status" aria-live="polite">Move the claw above a plushie, then press Drop!</p>
+        <div id="claw-prize" class="arcade-prize hidden" aria-live="polite"><strong id="claw-prize-emoji"></strong><span id="claw-prize-message"></span></div>
+        <div class="arcade-next">
+          <button type="button" class="btn secondary hidden" id="claw-restart">Play again ↻</button>
+          <button type="button" class="btn primary" id="claw-next">Continue to date plans ♡</button>
+        </div>
+        <p class="arcade-hint">No win required. Skip anytime. Keyboard: ← → to move and Space to drop.</p>
+      </div>
+      <button class="quiet" type="button" id="claw-back">← Back to the question</button>
     </section>
     <section class="plans hidden in" id="plans" aria-label="Choose a date plan">
       <div class="sectionhead"><div class="eyebrow">Quest accepted! +100 courage ♡</div><div class="happy-face" aria-hidden="true">🥹💗</div><h2>Choose your <span class="rose">side quest</span></h2><p>I prepared four possible adventures. Choose whichever sounds fun. <br>You pick the day; we can figure out the meeting time together!</p></div>
@@ -394,6 +458,7 @@
   const plans = document.getElementById('plans');
   const decline = document.getElementById('decline');
   const maybe = document.getElementById('maybe');
+  const arcade = document.getElementById('arcade');
   const maybeNote = document.getElementById('maybe-note');
   const maybeStatus = document.getElementById('maybe-status');
   const timeChoice = document.getElementById('time-choice');
@@ -412,7 +477,7 @@
 
   const updateQuest = () => {
     const scene = document.body.dataset.scene;
-    const step = scene === 'plans' ? (picked.classList.contains('hidden') ? 2 : 3) : 1;
+    const step = scene === 'arcade' ? 2 : scene === 'plans' ? (picked.classList.contains('hidden') ? 3 : 4) : 1;
     document.querySelectorAll('.quest-step').forEach(el => {
       const n = Number(el.dataset.step);
       el.classList.toggle('is-active', n === step && scene !== 'decline' && scene !== 'maybe');
@@ -420,12 +485,13 @@
     });
     questHint.textContent = scene === 'maybe' ? 'Quest on pause · You can always decide together.'
       : scene === 'decline' ? 'Quest complete · Thanks for being honest.'
-      : step === 1 ? 'Quest 1/3 · A tiny question, absolutely no pressure.'
-      : step === 2 ? 'Quest 2/3 · Choose your preferred adventure.'
-      : 'Quest 3/3 · Pick a day and time that suit you.';
+      : step === 1 ? 'Quest 1/4 · A tiny question, absolutely no pressure.'
+      : step === 2 ? 'Quest 2/4 · Bonus arcade. Feel free to skip.'
+      : step === 3 ? 'Quest 3/4 · Choose your preferred adventure.'
+      : 'Quest 4/4 · Pick a day and time that suit you.';
   };
   const show = target => {
-    [invite, plans, decline, maybe].forEach(el => el.classList.toggle('hidden', el !== target));
+    [invite, arcade, plans, decline, maybe].forEach(el => el.classList.toggle('hidden', el !== target));
     document.body.dataset.scene = target.id;
     updateQuest();
     window.scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'});
@@ -596,12 +662,88 @@
     }
   }
 
+
+  // The arcade is optional and does not affect Formspree or the calendar.
+  const clawStage=document.getElementById('claw-stage');
+  const clawToys=Array.from(clawStage.querySelectorAll('.claw-toy'));
+  const clawStatus=document.getElementById('claw-status');
+  const clawHeld=document.getElementById('claw-held');
+  const clawPrize=document.getElementById('claw-prize');
+  const clawRestart=document.getElementById('claw-restart');
+  const clawControls=['claw-left','claw-right','claw-drop'].map(id=>document.getElementById(id));
+  const toyNames=['tiny panda','very dramatic cat','fluffy bear','sleepy bunny'];
+  let clawX=50,clawTries=3,clawBusy=false,clawDone=false,clawSession=0;
+  const updateClaw=()=>{
+    clawStage.style.setProperty('--claw-x',clawX+'%');
+    document.getElementById('claw-tries').textContent=clawTries+(clawTries===1?' try left':' tries left');
+    clawControls.forEach(btn=>btn.disabled=clawBusy||clawDone);
+  };
+  const resetClaw=()=>{
+    clawSession++;clawX=50;clawTries=3;clawBusy=false;clawDone=false;
+    clawHeld.textContent='';
+    clawToys.forEach(t=>t.classList.remove('caught'));
+    clawStage.style.setProperty('--claw-depth','10%');
+    clawPrize.classList.add('hidden');clawRestart.classList.add('hidden');
+    clawStatus.textContent='Move the claw above a plushie, then press Drop!';
+    updateClaw();
+  };
+  const moveClaw=step=>{
+    if(clawBusy||clawDone)return;
+    clawX=Math.max(12,Math.min(88,clawX+step*8));updateClaw();
+  };
+  const dropClaw=()=>{
+    if(clawBusy||clawDone||!clawTries)return;
+    clawBusy=true;clawTries--;updateClaw();
+    clawStatus.textContent='Deploying highly questionable technology...';
+    clawStage.style.setProperty('--claw-depth','66%');
+    const session=clawSession;
+    window.setTimeout(()=>{
+      if(session!==clawSession||arcade.classList.contains('hidden'))return;
+      let nearest=null,index=-1,distance=Infinity;
+      clawToys.forEach((toy,i)=>{
+        const d=Math.abs(Number(toy.dataset.x)-clawX);
+        if(!toy.classList.contains('caught')&&d<distance){nearest=toy;index=i;distance=d;}
+      });
+      const win=Boolean(nearest&&distance<=10);
+      if(win){nearest.classList.add('caught');clawHeld.textContent=nearest.textContent.trim();clawStatus.textContent='Wait... it actually worked?!';}
+      else clawStatus.textContent='The claw has chosen chaos. Retrieving...';
+      clawStage.style.setProperty('--claw-depth','10%');
+      window.setTimeout(()=>{
+        if(session!==clawSession||arcade.classList.contains('hidden'))return;
+        clawBusy=false;
+        if(win){
+          clawDone=true;
+          document.getElementById('claw-prize-emoji').textContent=nearest.textContent.trim();
+          document.getElementById('claw-prize-message').textContent='You won a '+toyNames[index]+'! It has zero resale value but excellent emotional support skills.';
+          clawPrize.classList.remove('hidden');
+          clawStatus.textContent='Achievement unlocked: certified plushie collector ✨';
+          celebrate(window.innerWidth/2,window.innerHeight*.4,36);
+        }else if(clawTries){clawStatus.textContent='So close! The claw machine is being dramatic. Try again?';}
+        else{clawDone=true;clawStatus.textContent='The claw machine wins this round. Your date plans are still unlocked 🫡';}
+        clawRestart.classList.remove('hidden');updateClaw();
+      },reduceMotion?30:740);
+    },reduceMotion?30:740);
+  };
+  document.getElementById('claw-left').addEventListener('click',()=>moveClaw(-1));
+  document.getElementById('claw-right').addEventListener('click',()=>moveClaw(1));
+  document.getElementById('claw-drop').addEventListener('click',dropClaw);
+  clawRestart.addEventListener('click',resetClaw);
+  document.getElementById('claw-next').addEventListener('click',()=>{clawSession++;show(plans);});
+  document.getElementById('claw-back').addEventListener('click',()=>{clawSession++;show(invite);});
+  clawStage.addEventListener('keydown',event=>{
+    if(event.key==='ArrowLeft'){event.preventDefault();moveClaw(-1);}
+    else if(event.key==='ArrowRight'){event.preventDefault();moveClaw(1);}
+    else if(event.key===' '||event.key==='Enter'){event.preventDefault();dropClaw();}
+  });
+
   document.getElementById('yes').addEventListener('click', () => {
     celebrate(window.innerWidth/2,Math.min(window.innerHeight*.46,350),45);
     popQuip('yes');
     document.getElementById('yes').textContent = 'QUEST ACCEPTED! 🥹';
     window.setTimeout(() => {
-      show(plans);
+      resetClaw();
+      show(arcade);
+      document.getElementById("arcade-title").focus({preventScroll:true});
       document.getElementById('yes').textContent = "Yes, I'd love to ♡";
     }, reduceMotion?0:480);
   });
