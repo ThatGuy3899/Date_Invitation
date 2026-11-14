@@ -409,7 +409,7 @@
   };
   const noReply = () => "Hey, thanks for asking! I don't think a date is for me, but I appreciate the invitation :)";
   const configured = /^https:\/\/formspree\.io\/f\/[a-zA-Z0-9]+$/.test(FORMSPREE_ENDPOINT)
-    && !FORMSPREE_ENDPOINT.endsWith('/https://formspree.io/f/xeagenyj');
+    && !FORMSPREE_ENDPOINT.endsWith('/REPLACE_ME');
 
   function setStatus(element, message, type = '') {
     element.textContent = message;
