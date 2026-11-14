@@ -4,7 +4,19 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#fff9f4" />
-  <meta name="description" content="A little invitation, just for you." />
+  <meta name="description" content="A little invitation, just for you. Choose a coffee date adventure in KL ♡" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="A little invitation for you ♡" />
+  <meta property="og:description" content="Coffee, a tiny adventure, and a question for you 💌" />
+  <meta property="og:url" content="https://thatguy3899.github.io/Date_Invitation/" />
+  <meta property="og:image" content="https://thatguy3899.github.io/Date_Invitation/preview.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="A little invitation for you ♡" />
+  <meta name="twitter:description" content="An afternoon adventure in KL, perhaps?" />
+  <meta name="twitter:image" content="https://thatguy3899.github.io/Date_Invitation/preview.png" />
   <title>A little question for you ♡</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -275,6 +287,7 @@
 @media(max-width:530px){.quest-step{white-space:normal;flex-direction:column;text-align:center;line-height:1.2}.quest-steps{gap:3px}.arcade-shell{padding:23px 13px}.claw-stage{height:230px;border-width:6px;border-bottom-width:14px}.claw-toy{font-size:35px}.arcade-controls .btn{font-size:12px;padding:10px 3px}.arcade-next .btn{width:100%}}
 @media(prefers-reduced-motion:reduce){.claw-rope,.claw-arm,.claw-toy{transition:none!important}.arcade-prize strong{animation:none!important}}
   </style>
+  <link rel="stylesheet" href="enhancements.css" />
 </head>
 <body data-scene="invite">
 <div class="ambient" aria-hidden="true">
@@ -526,7 +539,7 @@
   const calendarTools = document.getElementById('calendar-tools');
   const googleCalendarLink = document.getElementById('google-calendar-link');
   const calendarEvent = () => {
-    if (!selectedPlan || !SCHEDULES[selectedPlan] || dateFlexible.checked || timeChoice.value === 'flexible' ||
+    if ((selectedPlan === 'Your own suggestion' && !SCHEDULES[selectedPlan]?.location) || !selectedPlan || !SCHEDULES[selectedPlan] || dateFlexible.checked || timeChoice.value === 'flexible' ||
         !dateChoice.value || dateChoice.value < dateChoice.min) return null;
     const numbers = dateChoice.value.split('-').map(Number);
     if (numbers.length !== 3 || numbers.some(n => !Number.isFinite(n))) return null;
@@ -583,7 +596,7 @@
   };
   const planReply = () => {
     const when = dateFlexible.checked ? "We can choose the day together" : formattedDay(dateChoice.value);
-    return `Hey! I'd love to go on a date 😊\nPlan: ${selectedPlan}\nDate: ${when}\nTime: ${formattedTime()}${note.value.trim()?`\nNote: ${note.value.trim()}`:''}`;
+    return `Hey! I'd love to go on a date 😊\nPlan: ${selectedPlan}${selectedPlan === 'Your own suggestion' ? `\nMy location idea: ${document.getElementById('custom-place')?.value.trim() || 'Let us choose together'}` : ''}\nDate: ${when}\nTime: ${formattedTime()}${note.value.trim()?`\nNote: ${note.value.trim()}`:''}`;
   };
   const maybeReply = () => "Hey! I'm not quite sure about a date yet, but I'd be happy to chat about it first 😊" + (maybeNote.value.trim() ? `\nNote: ${maybeNote.value.trim()}` : '');
   const noReply = () => "Hey, thanks for asking! I don't think a date is for me, but I appreciate the invitation :)";
@@ -635,6 +648,7 @@
       const payload = new FormData();
       payload.append('response', reply);
       payload.append('date_plan', plan || 'None');
+      payload.append('suggested_location', reply === 'Yes' && plan === 'Your own suggestion' ? (document.getElementById('custom-place')?.value.trim() || 'To be decided') : 'Not applicable');
       payload.append('chosen_date', date || 'Not applicable');
       payload.append('chosen_time_myt', reply === 'Yes' ? formattedTime() : 'Not applicable');
       payload.append('note', extraNote || '');
@@ -869,5 +883,6 @@
     });
   }
 </script>
+<script src="enhancements.js" defer></script>
 </body>
 </html>
