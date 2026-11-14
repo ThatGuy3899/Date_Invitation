@@ -186,9 +186,9 @@
   // 6. Confirmation only after Formspree really reports success.
   const confirmation=document.createElement("section");confirmation.id="confirmation";confirmation.className="confirmation-card hidden in";
   confirmation.setAttribute("aria-label","Answer sent successfully");
-  confirmation.innerHTML='<div class="top-illustration" aria-hidden="true">📬</div><div class="eyebrow">Message delivered · quest complete!</div><h2 id="confirmation-title">Your answer was sent ♡</h2><p id="confirmation-desc">Thanks for taking the time to reply.</p><div id="confirmation-summary" class="confirmation-summary"></div><div class="actions"><a href="#" target="_blank" rel="noopener noreferrer" id="confirmation-calendar" class="btn secondary">Add to Google Calendar ↗</a><button type="button" id="confirmation-restart" class="btn primary">Back to the invitation ♡</button></div><p>I'll follow up in our dating-app chat. Nothing is booked until we confirm together.</p>';
+  confirmation.innerHTML='<div class="top-illustration" aria-hidden="true">📬</div><div class="eyebrow">Message delivered · quest complete!</div><h2 id="confirmation-title">Your answer was sent ♡</h2><p id="confirmation-desc">Thanks for taking the time to reply.</p><div id="confirmation-summary" class="confirmation-summary"></div><div class="actions"><a href="#" target="_blank" rel="noopener noreferrer" id="confirmation-calendar" class="btn secondary">Add to Google Calendar ↗</a><button type="button" id="confirmation-restart" class="btn primary">Back to the invitation ♡</button></div><p>I will follow up in our dating-app chat. Nothing is booked until we confirm together.</p>';
   footer.parentElement.insertBefore(confirmation,footer);
-  $("#confirmation-restart").addEventListener("click",()=>show(invite));
+  $("#confirmation-restart").addEventListener("click",()=>{confirmation.classList.add("hidden");show(invite);});
   let shownConfirmation=false;
   const displayConfirmation=response=>{
     if(shownConfirmation)return;
