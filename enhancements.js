@@ -143,7 +143,7 @@
   customCard.innerHTML='<div class="plan-art"><span class="art-emoji" aria-hidden="true">💡📍</span></div><div class="plan-body"><div class="smallcaps">Plan 05 · Your call</div><h3>Somewhere else?</h3><p class="plan-sub">Have a café or place you want to try? I’m open to your ideas too.</p><div class="stats"><span>🗓️ Your schedule</span><span>✨ Your choice</span></div><button class="btn secondary choose" type="button">Suggest a place ♡</button></div>';
   const planGrid=$(".plan-grid");planGrid.appendChild(customCard);
   // Helpful details, not a fixed itinerary: each meeting place is just a suggestion.
-  $(".plan-card",planGrid).forEach(card=>{
+  Array.from(planGrid.querySelectorAll(".plan-card")).forEach(card=>{
     const info=locationInfo[card.dataset.plan] || openEndedTips;
     const details=document.createElement("details");
     details.className="comfort-tips";
