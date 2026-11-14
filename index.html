@@ -306,7 +306,7 @@
 <script>
   // Setup: create a free form at https://formspree.io, then replace REPLACE_ME with your form ID.
   // This is a public submission endpoint (not a secret). No email address is stored here.
-  const FORMSPREE_ENDPOINT = 'https://formspree.io/f/REPLACE_ME';
+  const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xeagenyj';
 
   const invite = document.getElementById('invite');
   const plans = document.getElementById('plans');
@@ -409,7 +409,7 @@
   };
   const noReply = () => "Hey, thanks for asking! I don't think a date is for me, but I appreciate the invitation :)";
   const configured = /^https:\/\/formspree\.io\/f\/[a-zA-Z0-9]+$/.test(FORMSPREE_ENDPOINT)
-    && !FORMSPREE_ENDPOINT.endsWith('/REPLACE_ME');
+    && !FORMSPREE_ENDPOINT.endsWith('/https://formspree.io/f/xeagenyj');
 
   function setStatus(element, message, type = '') {
     element.textContent = message;
