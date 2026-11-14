@@ -72,3 +72,30 @@ html[data-theme="night"] .plan-card.chosen{border-color:#e99abc}
 html[data-theme="night"] .footer{color:#c6aac0}
 html[data-theme="night"] .claw-stage{border-color:#a37b9e;background:radial-gradient(circle at 45% 20%,#5b4665,#3b314e)}
 @media(prefers-reduced-motion:reduce){.photo-gallery img{transition:none!important}}
+
+/* Finishing pass: clarity, accessibility, and lighter mobile loads */
+.skip-to-invitation{position:absolute;left:12px;top:-100px;z-index:300;padding:12px 18px;background:#3b2d36;color:#fff;border-radius:0 0 12px 12px;font-size:14px;font-weight:700}
+.skip-to-invitation:focus{top:0}
+.personal-note{max-width:490px;margin:-10px auto 22px!important;padding:13px 17px;border:1px solid #f0d8dd;border-radius:15px;background:#fff7f9;color:#76545f!important;font-size:14px;line-height:1.75}
+.photo-gallery[hidden],.location-preview iframe[hidden],.location-preview a[hidden],.location-preview button[hidden]{display:none!important}
+.photo-nav:focus-visible,.map-preview-button:focus-visible,#arcade-skip:focus-visible,#theme-toggle:focus-visible,.skip-to-invitation:focus-visible{outline:3px solid #78436c;outline-offset:3px}
+.map-preview-button{width:100%;background:#fff6f9;border:1px dashed #dcb1bd;border-radius:12px;padding:14px 12px;min-height:48px;font-size:13px;font-weight:700;color:#915e77;cursor:pointer}
+.map-preview-button:hover{background:#ffe9f3}
+.confirmation-update-note{max-width:470px;margin:10px auto!important;font-size:12px!important;color:#826c77!important}
+.reply-form .field-hint,.reply-form .optional{color:#78606c!important}
+.quest-hint{color:#785f68!important}
+.under{color:#7c606e!important}
+#claw-next,#arcade-skip{touch-action:manipulation}
+@media(max-width:530px){
+  #arcade-skip{position:static;float:none;display:block;margin:0 0 14px auto;min-height:42px}
+  .photo-nav{width:40px;height:40px}
+  .photo-caption{font-size:10px}
+  .personal-note{font-size:13px;line-height:1.6;padding:12px 13px}
+  #mobile-plan-controls button{min-width:48px;min-height:48px}
+  .plan-grid{overscroll-behavior-inline:contain}
+}
+html[data-theme="night"] .personal-note{background:#3e2d41;border-color:#75566b;color:#f7dce8!important}
+html[data-theme="night"] .map-preview-button{background:#49354f;color:#fae1ed;border-color:#a47c95}
+html[data-theme="night"] .reply-form .field-hint,html[data-theme="night"] .reply-form .optional,html[data-theme="night"] .confirmation-update-note,html[data-theme="night"] .quest-hint,html[data-theme="night"] .under{color:#ecd3e1!important}
+html[data-theme="night"] .photo-caption a{color:white}
+@media(prefers-reduced-motion:reduce){.plan-grid{scroll-behavior:auto!important}.photo-gallery img{transition:none!important}}
