@@ -142,3 +142,17 @@ html[data-theme="night"] .confirmation-companion p{color:#f2d0df!important}
   .confirmation-companion>span{animation:none!important}
   .comfort-tips summary:after{transition:none!important}
 }
+
+/* A small, personal greeting without overwhelming the invitation */
+.recipient-greeting{
+  font-family:'Caveat','Segoe Print','Bradley Hand',cursive;
+  font-size:clamp(27px,4vw,37px);
+  line-height:1.15;
+  font-weight:600;
+  color:#bd718c;
+  margin:15px auto -6px;
+  transform:rotate(-2deg);
+}
+html[data-theme="night"] .recipient-greeting{color:#f1b7d1}
+@media(max-width:530px){.recipient-greeting{margin:14px auto -4px}}
+@media(prefers-reduced-motion:reduce){.recipient-greeting{transform:none}}
