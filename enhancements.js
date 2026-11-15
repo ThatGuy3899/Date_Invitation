@@ -133,14 +133,14 @@
   }
   const creditsDetail=document.createElement("details");
   creditsDetail.id="photo-credits";
-  creditsDetail.innerHTML='<summary>About the location photos ♡</summary><p>Photos are hosted by Wikimedia Commons. The author and licence are displayed on each image and link to its source file. Licences: <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> and <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>. Photos may show earlier visits and shops can change.</p>';
+  creditsDetail.innerHTML='<summary>About the location photos</summary><p>Photos are hosted by Wikimedia Commons. The author and licence are displayed on each image and link to its source file. Licences: <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> and <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>. Photos may show earlier visits and shops can change.</p>';
   const footer=$(".footer");footer.parentElement.insertBefore(creditsDetail,footer);
   // 2. Respect the choice: custom suggestions are separate from the existing four.
   SCHEDULES[suggestedName] = {durationMinutes:150,location:""};
   const customCard=document.createElement("article");
   customCard.className="plan-card custom-card";
   customCard.dataset.plan=suggestedName;
-  customCard.innerHTML='<div class="plan-art"><span class="art-emoji" aria-hidden="true">💡📍</span></div><div class="plan-body"><div class="smallcaps">Plan 05 · Your call</div><h3>Somewhere else?</h3><p class="plan-sub">Have a café or place you want to try? I’m open to your ideas too.</p><div class="stats"><span>🗓️ Your schedule</span><span>✨ Your choice</span></div><button class="btn secondary choose" type="button">Suggest a place ♡</button></div>';
+  customCard.innerHTML='<div class="plan-art"><span class="art-emoji" aria-hidden="true">💡📍</span></div><div class="plan-body"><div class="smallcaps">Plan 05 · Your call</div><h3>Somewhere else?</h3><p class="plan-sub">Have a café or place you want to try? I’m open to your ideas too.</p><div class="stats"><span>🗓️ Your schedule</span><span>✨ Your choice</span></div><button class="btn secondary choose" type="button">Suggest a place</button></div>';
   const planGrid=$(".plan-grid");planGrid.appendChild(customCard);
   // Helpful details, not a fixed itinerary: each meeting place is just a suggestion.
   Array.from(planGrid.querySelectorAll(".plan-card")).forEach(card=>{
@@ -157,7 +157,7 @@
     rain.append(headingRain,document.createTextNode(info.rain));
     const flexible=document.createElement("p");
     flexible.className="comfort-reminder";
-    flexible.textContent="Nothing is set in stone — we'll choose the spot and timing together ♡";
+    flexible.textContent="Nothing is set in stone — we'll choose the spot and timing together";
     details.append(summary,meeting,rain,flexible);
     const choose=$(".choose",card);
     choose.parentElement.insertBefore(details,choose);
@@ -216,11 +216,11 @@
     selectedPlan=suggestedName;
     cards.forEach(card=>{
       card.classList.remove("chosen");
-      $(".choose",card).textContent="I like this plan ♡";
+      $(".choose",card).textContent="I like this plan";
     });
     customCard.classList.add("chosen");
-    $(".choose",customCard).textContent="Selected! ♡";
-    $("#picked-name").textContent="Your own suggestion ♡";
+    $(".choose",customCard).textContent="Selected!";
+    $("#picked-name").textContent="Your own suggestion";
     timeChoice.value="flexible";
     picked.classList.remove("hidden");
     customWrap.classList.remove("hidden");
@@ -231,7 +231,7 @@
   };
   $(".choose",customCard).addEventListener("click",selectCustom);
   cards.forEach(card=>$(".choose",card).addEventListener("click",()=>{
-    customCard.classList.remove("chosen");$(".choose",customCard).textContent="Suggest a place ♡";
+    customCard.classList.remove("chosen");$(".choose",customCard).textContent="Suggest a place";
     customWrap.classList.add("hidden");updateMap();
   }));
   customInput.addEventListener("input",()=>{
@@ -267,7 +267,7 @@
   // 6. Confirmation only after Formspree really reports success.
   const confirmation=document.createElement("section");confirmation.id="confirmation";confirmation.className="confirmation-card hidden in";
   confirmation.setAttribute("aria-label","Answer sent successfully");
-  confirmation.innerHTML='<div class="top-illustration" aria-hidden="true">📬</div><div class="eyebrow">Message submitted · quest complete!</div><h2 id="confirmation-title" tabindex="-1">Your answer was sent ♡</h2><p id="confirmation-desc">Thanks for taking the time to reply.</p><div id="confirmation-companion" class="confirmation-companion hidden"><span id="confirmation-companion-emoji" aria-hidden="true"></span><p>Your tiny arcade friend tagged along for the adventure. Still a virtual plushie, of course ♡</p></div><div id="confirmation-summary" class="confirmation-summary"></div><p id="confirmation-footnote">Nothing is booked until we confirm together.</p><div class="actions"><a href="#" target="_blank" rel="noopener noreferrer" id="confirmation-calendar" class="btn secondary">Add to Google Calendar ↗</a><button type="button" id="confirmation-restart" class="btn secondary">Change my answer ✎</button></div><p class="confirmation-update-note">Need to correct something? Changing your answer sends a new, clearly labelled update. It does not delete the first message.</p>';
+  confirmation.innerHTML='<div class="top-illustration" aria-hidden="true">📬</div><div class="eyebrow">Message submitted · quest complete!</div><h2 id="confirmation-title" tabindex="-1">Your answer was sent</h2><p id="confirmation-desc">Thanks for taking the time to reply.</p><div id="confirmation-companion" class="confirmation-companion hidden"><span id="confirmation-companion-emoji" aria-hidden="true"></span><p>Your tiny arcade friend tagged along for the adventure. Still a virtual plushie, of course</p></div><div id="confirmation-summary" class="confirmation-summary"></div><p id="confirmation-footnote">Nothing is booked until we confirm together.</p><div class="actions"><a href="#" target="_blank" rel="noopener noreferrer" id="confirmation-calendar" class="btn secondary">Add to Google Calendar ↗</a><button type="button" id="confirmation-restart" class="btn secondary">Change my answer ✎</button></div><p class="confirmation-update-note">Need to correct something? Changing your answer sends a new, clearly labelled update. It does not delete the first message.</p>';
   footer.parentElement.insertBefore(confirmation,footer);
   $("#confirmation-restart").addEventListener("click",()=>{
     if (typeof reopenResponseForEdit !== "function" || !reopenResponseForEdit()) return;
@@ -290,7 +290,7 @@
     const companion=$("#confirmation-companion");
     companion.classList.toggle("hidden",!yes||!earnedToy);
     $("#confirmation-companion-emoji").textContent=yes && earnedToy ? earnedToy : "";
-    $("#confirmation-title").textContent=yes?"Your date idea has been sent! 💗":maybe?"Message sent, no rush 🫶":"Thank you for answering 🌷";
+    $("#confirmation-title").textContent=yes?"Your date idea has been sent! ✨":maybe?"Message sent, no rush 🙂":"Thank you for answering 🌷";
     $("#confirmation-desc").textContent=yes?"Your choice was submitted. We can confirm the details together in our chat.":maybe?"Your message was submitted. We can keep chatting and see what feels right.":"Your answer was submitted. Thanks for letting me know.";
     $("#confirmation-footnote").textContent=yes?"Nothing is booked until we both confirm in chat.":maybe?"No rush — we can keep things relaxed.":"No pressure to explain or change your mind.";
     const details=yes ? "Plan: "+selectedPlan+"\nPlace: "+(selectedPlan===suggestedName ? safeText(customInput.value)||"To be decided" : locationInfo[selectedPlan]?.where||selectedPlan)+"\nDate: "+(dateFlexible.checked?"To be decided":formattedDay(dateChoice.value))+"\nTime: "+formattedTime() : maybe ? "Response: Maybe\nNote: "+(safeText($("#maybe-note").value)||"None") : "Response: No, thank you";
