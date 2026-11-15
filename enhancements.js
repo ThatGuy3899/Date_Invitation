@@ -324,4 +324,105 @@
   let savedTheme="day";try{savedTheme=localStorage.getItem("dateInviteTheme")||"day";}catch(e){}
   setTheme(savedTheme);
   toggle.addEventListener("click",()=>setTheme(document.documentElement.dataset.theme==="night"?"day":"night"));
+  // Optional meme-image easter egg: keeps the invitation uncluttered.
+  // Both photos are from Wikimedia Commons; source, author and licence stay visible.
+  const memeCards = [
+    {
+      image:commons("Cat on a laptop.jpg"),
+      alt:"A cat lying on a laptop, representing the website maker going overboard.",
+      top:"ME: I'LL JUST ASK NORMALLY",
+      bottom:"ALSO ME: BUILDS AN ENTIRE WEBSITE",
+      author:"Liew0100",licence:"CC BY 3.0",
+      licenceUrl:"https://creativecommons.org/licenses/by/3.0/",
+      source:"https://commons.wikimedia.org/wiki/File:Cat_on_a_laptop.jpg"
+    },
+    {
+      image:commons("Amazing cat eating.jpg"),
+      alt:"A cat eating, expressing enthusiasm for the food part of the date.",
+      top:"TRYING TO PICK A DATE PLAN",
+      bottom:"OKAY BUT WHERE'S THE FOOD?",
+      author:"Usamanadda",licence:"CC0",
+      licenceUrl:"https://creativecommons.org/publicdomain/zero/1.0/",
+      source:"https://commons.wikimedia.org/wiki/File:Amazing_cat_eating.jpg"
+    }
+  ];
+  const memeDialog=document.createElement("dialog");
+  memeDialog.id="meme-dialog";
+  memeDialog.className="meme-dialog";
+  memeDialog.setAttribute("aria-labelledby","meme-title");
+  memeDialog.innerHTML=`
+    <div class="meme-inner">
+      <div class="meme-bar">
+        <span id="meme-title">A tiny meme break</span>
+        <button type="button" id="meme-close" aria-label="Close memes">Close ×</button>
+      </div>
+      <figure class="meme-figure">
+        <div class="meme-visual">
+          <img id="meme-image" alt="" decoding="async" />
+          <div id="meme-fallback" class="meme-fallback" hidden aria-hidden="true">🐈</div>
+          <div class="meme-scrim" aria-hidden="true"></div>
+          <span id="meme-top" class="meme-caption meme-top"></span>
+          <span id="meme-bottom" class="meme-caption meme-bottom"></span>
+        </div>
+        <figcaption class="meme-credit">Photo: <a id="meme-source" href="" target="_blank" rel="noopener noreferrer"></a>
+        · <a id="meme-licence" href="" target="_blank" rel="noopener noreferrer"></a>
+        · Caption added for this invitation</figcaption>
+      </figure>
+      <div class="meme-controls">
+        <button type="button" id="meme-previous" aria-label="Previous meme">← Previous</button>
+        <span id="meme-counter" aria-live="polite">1 of 2</span>
+        <button type="button" id="meme-next" aria-label="Next meme">Next →</button>
+      </div>
+      <p class="meme-disclaimer">Just some silly extras. Back to the actual question whenever you like :)</p>
+    </div>`;
+  document.body.appendChild(memeDialog);
+  let memeIndex=0;
+  const memeImage=$("#meme-image",memeDialog);
+  const memeFallback=$("#meme-fallback",memeDialog);
+  memeImage.addEventListener("error",()=>{
+    memeImage.hidden=true;
+    memeFallback.hidden=false;
+  });
+  memeImage.addEventListener("load",()=>{
+    memeImage.hidden=false;
+    memeFallback.hidden=true;
+  });
+  const selectMeme=i=>{
+    memeIndex=(i+memeCards.length)%memeCards.length;
+    const m=memeCards[memeIndex];
+    $("#meme-top",memeDialog).textContent=m.top;
+    $("#meme-bottom",memeDialog).textContent=m.bottom;
+    $("#meme-counter",memeDialog).textContent=(memeIndex+1)+" of "+memeCards.length;
+    const source=$("#meme-source",memeDialog);
+    source.textContent=m.author;
+    source.href=m.source;
+    const licence=$("#meme-licence",memeDialog);
+    licence.textContent=m.licence;
+    licence.href=m.licenceUrl;
+    memeFallback.hidden=true;
+    memeImage.hidden=false;
+    memeImage.alt=m.alt;
+    memeImage.src=m.image;
+  };
+  const openMeme=i=>{
+    selectMeme(i);
+    if(typeof memeDialog.showModal==="function")memeDialog.showModal();
+    else memeDialog.setAttribute("open","");
+    $("#meme-close",memeDialog).focus();
+  };
+  $("#mail-sticker").addEventListener("click",()=>openMeme(0));
+  $("#easter-egg").addEventListener("click",()=>openMeme(1));
+  $("#meme-close",memeDialog).addEventListener("click",()=>{
+    if(memeDialog.close)memeDialog.close();
+    else memeDialog.removeAttribute("open");
+  });
+  memeDialog.addEventListener("click",e=>{
+    if(e.target===memeDialog){
+      if(memeDialog.close)memeDialog.close();
+      else memeDialog.removeAttribute("open");
+    }
+  });
+  $("#meme-next",memeDialog).addEventListener("click",()=>selectMeme(memeIndex+1));
+  $("#meme-previous",memeDialog).addEventListener("click",()=>selectMeme(memeIndex-1));
+
 })();
