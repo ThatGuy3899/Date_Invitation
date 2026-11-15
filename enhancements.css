@@ -27,10 +27,6 @@ header{gap:10px;flex-wrap:wrap}
 .location-preview .map-actions a{font-size:12px;color:#a35373;text-decoration:underline;text-underline-offset:3px;padding:6px 0}
 #mobile-plan-controls{display:none}
 #arcade-skip{position:sticky;top:9px;z-index:25;float:right;border:1px solid #ead2d7;color:#ae6781;background:#fffdfdee;border-radius:999px;min-height:35px;padding:6px 13px;font-size:11px;font-weight:700}
-.arcade-prize .coupon{background:#fff;border:1px dashed #dc99ab;border-radius:14px;margin:13px 0 7px;padding:10px 12px;color:#996175;font-size:12px;line-height:1.55}
-.arcade-prize .coupon b{display:block;font-size:16px}
-.arcade-prize .coupon small{font-size:10px;display:block;font-weight:400}
-.arcade-prize .coupon button{margin-top:9px;border:1px solid #dfafbc;color:#a46079;border-radius:10px;background:white;padding:8px 12px;font-weight:700;font-size:12px;cursor:pointer}
 .confirmation-card{text-align:center;background:rgba(255,255,255,.94);border:1px solid #fff;border-radius:29px;box-shadow:var(--shadow);padding:52px 25px 42px;max-width:760px;margin:16px auto}
 .confirmation-card h2{font-size:clamp(35px,6vw,57px);margin:8px auto}
 .confirmation-card p{line-height:1.75;color:var(--muted);font-size:14px;max-width:540px;margin:12px auto}
@@ -64,7 +60,7 @@ html[data-theme="night"] .lede,html[data-theme="night"] .plan-sub,html[data-them
 html[data-theme="night"] .itinerary,html[data-theme="night"] .location-preview,html[data-theme="night"] .custom-location-wrap,html[data-theme="night"] .confirmation-summary,html[data-theme="night"] .calendar-tools{background:#392d42;border-color:#6d5369;color:#eedce8}
 html[data-theme="night"] .reply-form input,html[data-theme="night"] .reply-form textarea,html[data-theme="night"] .reply-form select,html[data-theme="night"] .maybe-note-wrap textarea,html[data-theme="night"] .custom-location-wrap input,html[data-theme="night"] .copy-overlay-card textarea{background:#32263a;color:#ffedf8;border-color:#78556d}
 html[data-theme="night"] .timeline .stage-num,html[data-theme="night"] .itinerary summary,html[data-theme="night"] .itinerary .map-link{background:#4c3850;color:#f7b8d2}
-html[data-theme="night"] .arcade-prize,html[data-theme="night"] .arcade-prize .coupon{background:#45344b;color:#ffeaf3;border-color:#bb879e}
+html[data-theme="night"] .arcade-prize{background:#45344b;color:#ffeaf3;border-color:#bb879e}
 html[data-theme="night"] .photo-caption a{color:white}
 html[data-theme="night"] header,html[data-theme="night"] .quest-hint,html[data-theme="night"] .stats{color:#e1c5d7}
 html[data-theme="night"] .location-preview .transit,html[data-theme="night"] .custom-location-wrap small{color:#d7b8ce}
