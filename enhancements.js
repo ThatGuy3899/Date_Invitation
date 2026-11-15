@@ -5,33 +5,33 @@
   const $ = (selector, root=document) => root.querySelector(selector);
   const $$ = (selector, root=document) => Array.from(root.querySelectorAll(selector));
   const safeText = value => String(value || "").trim();
-  const planNames = ["REXKL & Central Market","The Exchange TRX","KLCC & Suria KLCC","118 Mall & Merdeka 118"];
+  const planNames = ["REXKL & Central Market","The Exchange TRX","LaLaport BBCC","118 Mall & Merdeka 118"];
   const suggestedName = "Your own suggestion";
   const locationInfo = {
     "REXKL & Central Market": {
-      where:"REXKL, Jalan Sultan, Kuala Lumpur", transit:"Pasar Seni MRT/LRT · walk to REXKL",details:"Coffee, books and Central Market",search:"REXKL Kuala Lumpur",
-      meet:"Outside REXKL's main entrance on Jalan Sultan, or at Pasar Seni station if that's easier for you.",
-      rain:"We can stay inside REXKL for coffee and BookXcess. If the rain gets heavy, we can save Central Market for another time."
+      where:"Central Market & REXKL, Kuala Lumpur",transit:"Pasar Seni MRT/LRT · easy walk to Central Market",details:"Indoor crafts and food, with optional REXKL",search:"Central Market Kuala Lumpur",
+      meet:"Inside Central Market near the main entrance, or at Pasar Seni station if that's easier.",
+      rain:"If it is hot or raining, we can stay inside Central Market for food and crafts and skip the walk to REXKL."
     },
     "The Exchange TRX":{
-      where:"The Exchange TRX, Persiaran TRX",transit:"Tun Razak Exchange MRT · linked to the mall",details:"Coffee, shops and the rooftop park",search:"The Exchange TRX Kuala Lumpur",
+      where:"The Exchange TRX, Persiaran TRX",transit:"Tun Razak Exchange MRT · linked to the mall",details:"Coffee, food and indoor shops; optional rooftop",search:"The Exchange TRX Kuala Lumpur",
       meet:"Inside The Exchange TRX, near the Concourse Level pedestrian link from Tun Razak Exchange MRT.",
-      rain:"We can skip the rooftop garden and explore the indoor shops, cafés and food spots instead."
+      rain:"If it is hot or raining, let's stay in the air-conditioned mall for food, coffee and shopping. The rooftop is completely optional."
     },
-    "KLCC & Suria KLCC":{
-      where:"Suria KLCC, Kuala Lumpur",transit:"KLCC LRT · follow the Suria KLCC signs",details:"Coffee, bookstore and KLCC Park",search:"Suria KLCC Kuala Lumpur",
-      meet:"Inside Suria KLCC near the KLCC LRT-linked Concourse Level entrance.",
-      rain:"We can skip KLCC Park and spend more time indoors at Kinokuniya, a café or the mall."
+    "LaLaport BBCC":{
+      where:"LaLaport BBCC, 2 Jalan Hang Tuah, Kuala Lumpur",transit:"Hang Tuah LRT/Monorail · sheltered walkway to mall",details:"Food, books and optional K-pop finds",search:"LaLaport BBCC Kuala Lumpur",
+      meet:"Inside LaLaport near the Hang Tuah station-linked transportation hub at LG1, East Atrium. We can confirm an easy landmark in chat.",
+      rain:"We can keep the whole date indoors with food, BookXcess and whichever pop-culture shops are open."
     },
     "118 Mall & Merdeka 118":{
-      where:"118 Mall, Jalan Hang Jebat",transit:"Merdeka MRT · direct mall connection",details:"Explore the new mall together",search:"118 Mall Kuala Lumpur",
-      meet:"On the 118 Mall side of the pedestrian connection from Merdeka MRT. We can confirm a specific landmark in chat.",
-      rain:"We can stay inside 118 Mall for the artisan shops, the mall's interiors and a meal, then skip outdoor photos."
+      where:"118 Mall, Jalan Hang Jebat",transit:"Merdeka MRT · linked to the mall; Plaza Rakyat LRT also connected",details:"Explore a new mall and choose from open shops",search:"118 Mall Kuala Lumpur",
+      meet:"Near the sheltered connection from Merdeka MRT or Plaza Rakyat LRT — whichever is easier for you. We'll confirm the exact meeting point in chat.",
+      rain:"We can stay inside 118 Mall and choose from shops and cafés that are open, skipping outdoor photos. Some shops are still opening."
     }
   };
   const openEndedTips = {
     meet:"We can choose an easy-to-find public meeting point once we agree on a place.",
-    rain:"If it rains, we can pick an indoor café nearby or choose another day."
+    rain:"If it’s hot or raining, we can find a comfortable indoor café nearby or choose another day."
   };
   // Photographer details and licensing are linked to the original Commons file pages.
   const commons = file => "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(file) + "?width=900";
@@ -47,9 +47,9 @@
       ["TRX City Park","TRX_City_Park_at_The_Exchange_TRX_(23.12.02).jpg","LegendaryLim","CC0"],
       ["The Exchange TRX","The_Exchange_TRX_20231216_(1).jpg","InterEdit88","CC0"]
     ],
-    "KLCC & Suria KLCC":[
-      ["Suria KLCC","Suria_KLCC_2023_01.jpg","Pangalau","CC BY-SA 4.0"],
-      ["Suria KLCC complex","Suria_KLCC_2023_02.jpg","Pangalau","CC BY-SA 4.0"]
+    "LaLaport BBCC":[
+      ["Inside LaLaport BBCC","BBCC_Lalaport,_Kuala_Lumpur.jpg","Azreey","CC BY-SA 4.0"],
+      ["LaLaport BBCC shopping interior","LaLaport_BBCC_(220802-1518).jpg","Wee Hong","CC BY-SA 4.0"]
     ],
     "118 Mall & Merdeka 118":[
       ["118 Mall and Merdeka 118","118_Mall_from_Jalan_Hang_Jebat.jpg","Wlsrudals","CC0"],
@@ -148,12 +148,12 @@
     const details=document.createElement("details");
     details.className="comfort-tips";
     const summary=document.createElement("summary");
-    summary.textContent="📍 Meet-up & rainy-day backup";
+    summary.textContent="📍 Meet-up & weather backup";
     const meeting=document.createElement("p");
     const headingMeet=document.createElement("strong");headingMeet.textContent="Easy meet-up: ";
     meeting.append(headingMeet,document.createTextNode(info.meet));
     const rain=document.createElement("p");
-    const headingRain=document.createElement("strong");headingRain.textContent="If it rains: ";
+    const headingRain=document.createElement("strong");headingRain.textContent="If it’s hot or rainy: ";
     rain.append(headingRain,document.createTextNode(info.rain));
     const flexible=document.createElement("p");
     flexible.className="comfort-reminder";
@@ -170,7 +170,7 @@
   yesForm.parentElement.insertBefore(customWrap,yesForm);
   const preview=document.createElement("div");
   preview.id="location-preview";preview.className="location-preview hidden";
-  preview.innerHTML='<h3 id="location-heading">Meeting spot</h3><p class="transit" id="location-transit"></p><div class="selected-comfort"><p><strong>📍 Suggested meet-up</strong><span id="selected-meet"></span></p><p><strong>☔ Rainy-day backup</strong><span id="selected-rain"></span></p><small>Just ideas — we can confirm a meeting point and time together in chat.</small></div><button class="map-preview-button" type="button" id="show-location-map">🗺️ Load map preview</button><iframe id="location-map" title="Map preview of selected date location" loading="lazy" hidden referrerpolicy="no-referrer-when-downgrade"></iframe><div class="map-actions"><a id="location-directions" target="_blank" rel="noopener noreferrer">Open Google Maps ↗</a><a id="location-transit-link" target="_blank" rel="noopener noreferrer">Transit directions ↗</a></div>';
+  preview.innerHTML='<h3 id="location-heading">Meeting spot</h3><p class="transit" id="location-transit"></p><div class="selected-comfort"><p><strong>📍 Suggested meet-up</strong><span id="selected-meet"></span></p><p><strong>☔ Heat or rain backup</strong><span id="selected-rain"></span></p><small>Just ideas — we can confirm a meeting point and time together in chat.</small></div><button class="map-preview-button" type="button" id="show-location-map">🗺️ Load map preview</button><iframe id="location-map" title="Map preview of selected date location" loading="lazy" hidden referrerpolicy="no-referrer-when-downgrade"></iframe><div class="map-actions"><a id="location-directions" target="_blank" rel="noopener noreferrer">Open Google Maps ↗</a><a id="location-transit-link" target="_blank" rel="noopener noreferrer">Transit directions ↗</a></div>';
   customWrap.parentElement.insertBefore(preview,yesForm);
   const updateMap=()=>{
     const custom=selectedPlan===suggestedName;
