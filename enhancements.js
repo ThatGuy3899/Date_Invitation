@@ -264,24 +264,6 @@
   const skip=document.createElement("button");skip.type="button";skip.id="arcade-skip";skip.textContent="Skip game ↗";skip.title="Go directly to the date plans";
   skip.addEventListener("click",()=>$("#claw-next").click());
   $(".arcade-shell").insertBefore(skip,$(".arcade-shell").firstChild);
-  // 5. A proper virtual prize — not a real discount or purchase obligation.
-  const prize=$("#claw-prize");
-  const attachCoupon=()=>{
-    if(prize.classList.contains("hidden"))return;
-    if($(".coupon",prize))return;
-    const coupon=document.createElement("div");coupon.className="coupon";
-    coupon.innerHTML='<b>☕ Imaginary Coffee Voucher</b><span>One coffee on me, if we both decide to meet. No expiry; no pressure; absolutely no barcode.</span><small>Not redeemable at any shop. Just a silly little promise.</small><button type="button">Save virtual voucher ↓</button>';
-    $("button",coupon).addEventListener("click",()=>{
-      const svg='<svg xmlns="http://www.w3.org/2000/svg" width="840" height="450" viewBox="0 0 840 450"><rect width="840" height="450" rx="34" fill="#fff4ee"/><rect x="24" y="24" width="792" height="402" rx="24" fill="#fff9fb" stroke="#dc8f9f" stroke-dasharray="12 10" stroke-width="5"/><text x="420" y="138" text-anchor="middle" font-size="58" fill="#aa627c" font-family="Georgia">A tiny coffee voucher</text><text x="420" y="218" text-anchor="middle" font-size="28" fill="#68485b" font-family="Arial">One coffee, if we both choose to meet</text><text x="420" y="280" text-anchor="middle" font-size="25" fill="#956b80" font-family="Arial">100% imaginary until we agree :)</text><text x="420" y="356" text-anchor="middle" font-size="22" fill="#c97f97" font-family="Arial">Valid only between us</text></svg>';
-      const blob=new Blob([svg],{type:"image/svg+xml"});
-      const url=URL.createObjectURL(blob);const link=document.createElement("a");
-      link.href=url;link.download="virtual-coffee-voucher.svg";document.body.appendChild(link);link.click();link.remove();
-      window.setTimeout(()=>URL.revokeObjectURL(url),1500);
-    });
-    prize.appendChild(coupon);
-  };
-  new MutationObserver(attachCoupon).observe(prize,{attributes:true,attributeFilter:["class"]});
-  $("#claw-restart").addEventListener("click",()=>{const c=$(".coupon",prize);if(c)c.remove();});
   // 6. Confirmation only after Formspree really reports success.
   const confirmation=document.createElement("section");confirmation.id="confirmation";confirmation.className="confirmation-card hidden in";
   confirmation.setAttribute("aria-label","Answer sent successfully");
